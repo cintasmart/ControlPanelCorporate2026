@@ -38,7 +38,7 @@
 
     <header class="w-full max-w-5xl mx-auto relative z-10 mb-8 mt-4">
         <div class="flex items-center justify-center gap-3 mb-2">
-            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.1.7</h3>
+            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.1.8</h3>
             <button id="btn-login-sync" class="w-8 h-8 rounded-full bg-red-500/20 border border-red-500 text-red-500 flex items-center justify-center text-xs transition-all shadow-[0_0_10px_rgba(239,68,68,0.5)] cursor-pointer hover:scale-110" title="Offline / Terkunci" onclick="window.toggleLoginModal()">
                 <i id="icon-login-sync" class="fas fa-lock"></i>
             </button>
@@ -150,7 +150,6 @@
         <div id="dir-analisis-lanjutan" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
         <div id="dir-kontribusi-outlet" class="mb-6"></div>
         <div id="dir-summary-divisi-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"></div>
-        
 
         <div class="glass rounded-3xl overflow-hidden shadow-2xl border border-gray-700 w-full mb-10">
             <div class="bg-gray-900/80 p-4 border-b border-gray-700 flex justify-between items-center"><h3 class="font-black text-cyan-400 text-lg uppercase tracking-wider flex items-center gap-2"><i class="fas fa-calendar-alt"></i> Detail Pencapaian Akumulasi (Per Bulan)</h3></div>
@@ -410,7 +409,20 @@
                         const count = snap.numChildren();
                         const dV = document.getElementById('daily-visits-count');
                         if(dV) { dV.innerText = `${count} Hari Ini`; }
+                    }, (error) => {
+                        console.warn("Akses RTDB ditolak/gagal:", error);
+                        const dV = document.getElementById('daily-visits-count');
+                        if(dV) { dV.innerText = "Error Akses (Cek RTDB)"; dV.parentElement.title = "Pastikan Rules Realtime Database bernilai true."; }
                     });
+
+                    // Timeout Fallback: Mencegah tulisan "Memuat..." nyangkut selamanya
+                    setTimeout(() => {
+                        const dV = document.getElementById('daily-visits-count');
+                        if(dV && dV.innerText.includes("Memuat")) {
+                            dV.innerText = "1 Hari Ini (Offline/Pending)";
+                            dV.parentElement.title = "Koneksi ke Firebase Realtime Database tertunda atau belum diatur.";
+                        }
+                    }, 5000);
 
                     onSnapshot(colRef, (snapshot) => { let temp = []; snapshot.forEach(d => { temp.push(d.data()); }); window.data = temp; if(typeof window.renderHarian === 'function') { window.renderHarian(); window.renderDirektori(); window.renderDatabase(); } });
                     onSnapshot(logoRef, (docSnap) => { const lg = document.getElementById('header-logo'); const inLogo = document.getElementById('in-logo-url'); if (docSnap.exists()) { const url = docSnap.data().url; if(lg && url) { lg.src = url; lg.classList.remove('hidden'); } if(inLogo) inLogo.value = url; } else { if(lg) lg.classList.add('hidden'); if(inLogo) inLogo.value = ''; } });
@@ -604,7 +616,7 @@
                 el.innerHTML = `
                     <div class="glass p-5 rounded-2xl border-t-4 border-blue-500 flex flex-col justify-center shadow-[0_0_20px_rgba(59,130,246,0.15)] group hover:-translate-y-1 transition-transform"><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-3 flex items-center gap-2"><i class="fas fa-history text-blue-500"></i> MoM (${lblPeriode})</p><div class="flex justify-between items-end mb-3 border-b border-gray-700/50 pb-3"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Omset Bulan Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(momO).toLocaleString()}</span></div>${window.getTrendBadge(momPctO)}</div><div class="flex justify-between items-end"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Profit Bulan Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(momP).toLocaleString()}</span></div>${window.getTrendBadge(momPctP)}</div></div>
                     <div class="glass p-5 rounded-2xl border-t-4 border-purple-500 flex flex-col justify-center shadow-[0_0_20px_rgba(168,85,247,0.15)] group hover:-translate-y-1 transition-transform"><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-3 flex items-center gap-2"><i class="fas fa-calendar-alt text-purple-500"></i> YoY (${lblPeriode})</p><div class="flex justify-between items-end mb-3 border-b border-gray-700/50 pb-3"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Omset Tahun Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(yoyO).toLocaleString()}</span></div>${window.getTrendBadge(yoyPctO)}</div><div class="flex justify-between items-end"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Profit Tahun Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(yoyP).toLocaleString()}</span></div>${window.getTrendBadge(yoyPctP)}</div></div>
-                    <div class="glass p-5 rounded-2xl border-t-4 border-${dsiCol}-500 flex flex-col justify-center shadow-[0_0_20px_rgba(${dsiShadow},0.15)] group hover:-translate-y-1 transition-transform relative overflow-hidden"><div class="absolute right-[-10px] bottom-[-10px] opacity-10 text-8xl text-${dsiCol}-500 pointer-events-none"><i class="fas fa-stopwatch"></i></div><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-2 flex items-center gap-2 relative z-10"><i class="fas fa-hourglass-half text-${dsiCol}-500"></i> (Umur Persediaan Harian)</p><div class="flex items-end gap-2 mt-2 relative z-10"><h3 class="text-5xl font-black text-${dsiCol}-400 tracking-tighter drop-shadow-lg">${umurSedia}</h3><span class="text-sm text-gray-400 font-bold mb-1.5 uppercase tracking-wide">Hari</span></div><p class="text-[9px] text-${dsiCol}-300/50 mt-3 font-semibold relative z-10 bg-gray-900/50 p-1.5 rounded inline-block border border-gray-800">*(Stok / HPP) x ${rangeHari} Hari</p></div>
+                    <div class="glass p-5 rounded-2xl border-t-4 border-${dsiCol}-500 flex flex-col justify-center shadow-[0_0_20px_rgba(${dsiShadow},0.15)] group hover:-translate-y-1 transition-transform relative overflow-hidden"><div class="absolute right-[-10px] bottom-[-10px] opacity-10 text-8xl text-${dsiCol}-500 pointer-events-none"><i class="fas fa-stopwatch"></i></div><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-2 flex items-center gap-2 relative z-10"><i class="fas fa-hourglass-half text-${dsiCol}-500"></i> DSI (Umur Persediaan Harian)</p><div class="flex items-end gap-2 mt-2 relative z-10"><h3 class="text-5xl font-black text-${dsiCol}-400 tracking-tighter drop-shadow-lg">${umurSedia}</h3><span class="text-sm text-gray-400 font-bold mb-1.5 uppercase tracking-wide">Hari</span></div><p class="text-[9px] text-${dsiCol}-300/50 mt-3 font-semibold relative z-10 bg-gray-900/50 p-1.5 rounded inline-block border border-gray-800">*(Stok / HPP) x ${rangeHari} Hari</p></div>
                     <div class="glass p-5 rounded-2xl border-t-4 border-${bCol}-500 flex flex-col justify-center shadow-[0_0_20px_rgba(0,0,0,0.15)] group hover:-translate-y-1 transition-transform relative overflow-hidden"><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-3 flex items-center justify-between"><span class="flex items-center gap-2"><i class="fas fa-shopping-cart text-${bCol}-500"></i> Kontrol Pembelian</span><span class="bg-${bCol}-900/80 text-${bCol}-300 px-2 py-0.5 rounded text-[8px] border border-${bCol}-500 font-black tracking-wider shadow-md ${anim}">${bStat}</span></p><div class="flex justify-between items-end mb-3 border-b border-gray-700/50 pb-3"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Aktual Pembelian</p><span class="text-sm font-bold text-${bCol}-400 drop-shadow-md">Rp ${Math.round(aktB).toLocaleString()}</span></div><div class="text-right"><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Target Beli Berjalan</p><span class="text-xs font-bold text-gray-300">Rp ${Math.round(tgtB).toLocaleString()}</span></div></div><div><div class="w-full bg-gray-800 rounded-full h-1.5 shadow-inner mt-1"><div class="bg-${bCol}-500 h-1.5 rounded-full shadow-[0_0_8px_currentColor]" style="width: ${Math.min(pctVal, 100)}%"></div></div><div class="flex justify-between items-center mt-1"><span class="text-[9px] text-gray-500 font-bold">Pencapaian</span><span class="text-[10px] font-black text-${bCol}-400">${pctVal}%</span></div></div></div>
                 `;
             }
