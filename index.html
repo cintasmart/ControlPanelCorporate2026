@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Montserrat:wght@800;900&display=swap');
@@ -38,7 +39,7 @@
 
     <header class="w-full max-w-5xl mx-auto relative z-10 mb-8 mt-4">
         <div class="flex items-center justify-center gap-3 mb-2">
-            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.1.8</h3>
+            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.1.9</h3>
             <button id="btn-login-sync" class="w-8 h-8 rounded-full bg-red-500/20 border border-red-500 text-red-500 flex items-center justify-center text-xs transition-all shadow-[0_0_10px_rgba(239,68,68,0.5)] cursor-pointer hover:scale-110" title="Offline / Terkunci" onclick="window.toggleLoginModal()">
                 <i id="icon-login-sync" class="fas fa-lock"></i>
             </button>
@@ -56,23 +57,41 @@
 
     <nav class="flex flex-wrap justify-center gap-2 md:gap-3 mb-6 w-full max-w-5xl mx-auto relative z-10">
         <button id="btn-nav-harian" class="nav-btn flex-1 px-3 py-3 rounded-xl bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer border border-emerald-400/30"><i class="fas fa-calendar-day"></i> <span class="hidden sm:inline">Harian</span></button>
-        <button id="btn-nav-direktori" class="nav-btn flex-1 px-3 py-3 rounded-xl bg-gray-900/40 border border-gray-700 text-gray-400 hover:border-cyan-500 hover:text-cyan-400 transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer"><i class="fas fa-folder-open"></i> <span class="hidden sm:inline">Bulanan</span></button>
+        <button id="btn-nav-Bulanan" class="nav-btn flex-1 px-3 py-3 rounded-xl bg-gray-900/40 border border-gray-700 text-gray-400 hover:border-cyan-500 hover:text-cyan-400 transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer"><i class="fas fa-folder-open"></i> <span class="hidden sm:inline">Bulanan</span></button>
+        <button id="btn-nav-grafik" class="nav-btn flex-1 px-3 py-3 rounded-xl bg-gray-900/40 border border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer"><i class="fas fa-chart-pie"></i> <span class="hidden sm:inline">Grafik</span></button>
+        <button id="btn-nav-proyeksi" class="nav-btn flex-1 px-3 py-3 rounded-xl bg-gray-900/40 border border-gray-700 text-gray-400 hover:border-purple-500 hover:text-purple-400 transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer"><i class="fas fa-magic"></i> <span class="hidden sm:inline">Proyeksi</span></button>
         <button id="btn-nav-parameter" class="nav-btn flex-1 px-3 py-3 rounded-xl bg-gray-900/40 border border-gray-700 text-gray-400 hover:border-fuchsia-500 hover:text-fuchsia-400 transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer"><i class="fas fa-cog"></i> <span class="hidden sm:inline">Parameter</span></button>
     </nav>
 
-    <div class="glass px-4 md:px-6 py-2.5 rounded-full border border-gray-600/50 shadow-xl flex items-center justify-center gap-3 md:gap-4 text-[10px] md:text-xs font-bold font-mono transition-all hover:border-cyan-500/50 hover:bg-gray-800/80 backdrop-blur-xl max-w-fit mx-auto mb-10 relative z-10">
-        <div class="flex items-center gap-1.5 md:gap-2 cursor-help group" id="online-users-container" title="Sedang memindai jaringan...">
-            <span class="relative flex h-2 w-2 md:h-3 md:w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-full w-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span></span>
-            <span id="online-count" class="text-emerald-400 group-hover:text-emerald-300 transition-colors">1 Aktif</span>
-        </div>
-        <div class="w-px h-4 md:h-5 bg-gray-600/50"></div>
-        <div class="flex items-center gap-1.5 md:gap-2 cursor-help group text-indigo-400" title="Total Perangkat Unik yang Mengakses Hari Ini">
-            <i class="fas fa-users drop-shadow-[0_0_5px_rgba(99,102,241,0.8)]"></i>
-            <span id="daily-visits-count" class="group-hover:text-indigo-300 transition-colors">Memuat...</span>
-        </div>
-        <div class="w-px h-4 md:h-5 bg-gray-600/50"></div>
-        <div class="flex items-center gap-1.5 md:gap-2 text-cyan-400">
-            <i class="far fa-clock text-cyan-500 animate-pulse"></i><span id="realtime-clock" class="tracking-wide">Memuat WIB...</span>
+    <!-- STATUS BAR PENGUNJUNG & WAKTU (SEBARIS & DI TENGAH) -->
+    <div class="flex justify-center w-full max-w-5xl mx-auto relative z-10 mb-10">
+        <div class="glass px-5 py-2.5 rounded-full border border-gray-600/50 shadow-xl flex flex-wrap items-center justify-center gap-3 md:gap-5 text-[10px] md:text-xs font-bold font-mono transition-all hover:border-cyan-500/50 hover:bg-gray-800/80 backdrop-blur-xl max-w-fit">
+            
+            <!-- Online Aktif -->
+            <div class="flex items-center gap-1.5 md:gap-2 cursor-help group" title="Koneksi Aktif Bersamaan (Live).">
+                <span class="relative flex h-2.5 w-2.5 md:h-3 md:w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 md:h-3 md:w-3 bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+                </span>
+                <span id="online-count" class="text-emerald-400 group-hover:text-emerald-300 transition-colors">1 Aktif</span>
+            </div>
+            
+            <div class="w-px h-3 md:h-4 bg-gray-600/50"></div>
+            
+            <!-- Kunjungan Unik Harian -->
+            <div class="flex items-center gap-1.5 md:gap-2 cursor-help group text-indigo-400" title="Total Perangkat Unik yang Mengakses Hari Ini">
+                <i class="fas fa-users drop-shadow-[0_0_5px_rgba(99,102,241,0.8)]"></i>
+                <span id="daily-visits-count" class="group-hover:text-indigo-300 transition-colors">Memuat...</span>
+            </div>
+            
+            <div class="w-px h-3 md:h-4 bg-gray-600/50"></div>
+            
+            <!-- Jam Real-Time -->
+            <div class="flex items-center gap-1.5 md:gap-2 text-cyan-400">
+                <i class="far fa-clock text-cyan-500 animate-pulse"></i>
+                <span id="realtime-clock" class="tracking-wide">Memuat WIB...</span>
+            </div>
+            
         </div>
     </div>
 
@@ -161,6 +180,113 @@
                     <tbody id="direktori-list" class="text-sm"></tbody>
                 </table>
                 <div id="direktori-empty" class="text-center py-12 text-gray-500 font-bold glass bg-transparent border-none"><i class="fas fa-folder-open text-5xl mb-4 opacity-50"></i><br>Belum ada data bulanan.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN GRAFIK VISUALISASI -->
+    <div id="page-grafik" class="page max-w-[90rem] mx-auto hidden">
+        <div class="flex flex-col lg:flex-row justify-between items-center mb-6 gap-4 glass p-4 rounded-2xl w-full border-t-4 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
+            <div class="text-center lg:text-left relative w-full lg:w-auto">
+                <h1 class="text-3xl font-black text-blue-400 tracking-tight">Analitik Visual Data</h1>
+                <p class="text-gray-400 text-sm mt-1 font-semibold">Tinjauan Grafis Tren Penjualan & Porsi Kontribusi</p>
+            </div>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <select id="grfFilterOutlet" class="bg-gray-800 p-2.5 rounded-lg text-white border border-gray-600 focus:border-blue-500 outline-none text-sm min-w-[150px] font-bold"><option value="">🏢 Semua Outlet</option><option value="Corporate">🏢 Corporate (Pusat)</option><option value="RN01 (Bratang)">RN01 (Bratang)</option><option value="RN02 (Daily Reny)">RN02 (Daily Reny)</option><option value="RN03 (Rewwin)">RN03 (Rewwin)</option></select>
+                <select id="grfFilterDivisi" class="bg-gray-800 p-2.5 rounded-lg text-white border border-gray-600 focus:border-blue-500 outline-none text-sm min-w-[120px] font-bold"><option value="">📁 Semua Divisi</option><option value="Grocery">Grocery</option><option value="GMS">GMS</option><option value="Fresh">Fresh</option><option value="Lainnya">Lainnya</option></select>
+                <select id="grfFilterBulan" class="bg-gray-800 p-2.5 rounded-lg text-blue-400 border border-blue-500/50 font-bold outline-none text-sm min-w-[140px]"></select>
+                <select id="grfFilterTahun" class="bg-gray-800 p-2.5 rounded-lg text-blue-400 border border-blue-500/50 font-bold outline-none text-sm min-w-[100px]"></select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+            <div class="lg:col-span-2 glass p-4 md:p-6 rounded-3xl border border-gray-700 shadow-2xl relative">
+                <h3 class="text-xs text-gray-400 uppercase font-black tracking-widest mb-4"><i class="fas fa-chart-line text-cyan-400 mr-2"></i> Tren Pergerakan Omset & Profit (Harian)</h3>
+                <div class="w-full h-[300px] md:h-[400px]">
+                    <canvas id="chartTrendHarian"></canvas>
+                </div>
+            </div>
+            <div class="glass p-4 md:p-6 rounded-3xl border border-gray-700 shadow-2xl relative flex flex-col">
+                <h3 class="text-xs text-gray-400 uppercase font-black tracking-widest mb-4"><i class="fas fa-chart-pie text-emerald-400 mr-2"></i> Porsi Kontribusi Departemen</h3>
+                <div class="w-full flex-grow flex items-center justify-center min-h-[250px]">
+                    <canvas id="chartDeptContrib"></canvas>
+                </div>
+                <p class="text-[10px] text-gray-500 text-center mt-4">*Berdasarkan Total Omset Aktual pada periode terpilih</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN PROYEKSI & LEADERBOARD -->
+    <div id="page-proyeksi" class="page max-w-[90rem] mx-auto hidden">
+        <div class="flex flex-col lg:flex-row justify-between items-center mb-6 gap-4 glass p-4 rounded-2xl w-full border-t-4 border-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
+            <div class="text-center lg:text-left relative w-full lg:w-auto">
+                <h1 class="text-3xl font-black text-purple-400 tracking-tight">AI Forecasting & Evaluasi</h1>
+                <p class="text-gray-400 text-sm mt-1 font-semibold">Proyeksi Pencapaian Akhir Bulan & Peringkat Departemen</p>
+            </div>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <select id="proFilterOutlet" class="bg-gray-800 p-2.5 rounded-lg text-white border border-gray-600 focus:border-purple-500 outline-none text-sm min-w-[150px] font-bold"><option value="">🏢 Semua Outlet</option><option value="Corporate">🏢 Corporate (Pusat)</option><option value="RN01 (Bratang)">RN01 (Bratang)</option><option value="RN02 (Daily Reny)">RN02 (Daily Reny)</option><option value="RN03 (Rewwin)">RN03 (Rewwin)</option></select>
+                <select id="proFilterDivisi" class="bg-gray-800 p-2.5 rounded-lg text-white border border-gray-600 focus:border-purple-500 outline-none text-sm min-w-[120px] font-bold"><option value="">📁 Semua Divisi</option><option value="Grocery">Grocery</option><option value="GMS">GMS</option><option value="Fresh">Fresh</option><option value="Lainnya">Lainnya</option></select>
+                <select id="proFilterDept" class="bg-gray-800 p-2.5 rounded-lg text-white border border-gray-600 focus:border-purple-500 outline-none text-sm min-w-[140px] font-bold"><option value="">📂 Semua Dept</option><optgroup label="Grocery"><option value="Food A">Food A</option><option value="Food B">Food B</option><option value="Non Food C">Non Food C</option><option value="Non Food D">Non Food D</option></optgroup><optgroup label="GMS"><option value="Fashion">Fashion</option><option value="Khusus A">Khusus A</option><option value="Khusus B">Khusus B</option><option value="Perlengkapan Bayi">Perlengkapan Bayi</option><option value="Serba Aneka">Serba Aneka</option><option value="Perlengkapan Rumah Tangga">Perlengkapan Rumah Tangga</option><option value="Perlengkapan Sekolah">Perlengkapan Sekolah</option></optgroup><optgroup label="Fresh"><option value="Bakery">Bakery</option><option value="Fresh & Beverage">Fresh & Beverage</option><option value="Fruit & Vegetables">Fruit & Vegetables</option><option value="Perishable">Perishable</option></optgroup><option value="LAINNYA_UNCATEGORIZED">⚠️ Dept Lainnya</option></select>
+                <select id="proFilterBulan" class="bg-gray-800 p-2.5 rounded-lg text-purple-400 border border-purple-500/50 font-bold outline-none text-sm min-w-[140px]"></select>
+                <select id="proFilterTahun" class="bg-gray-800 p-2.5 rounded-lg text-purple-400 border border-purple-500/50 font-bold outline-none text-sm min-w-[100px]"></select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass p-5 rounded-2xl border border-gray-700 bg-gray-900/50">
+                <h3 class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Rata-Rata Penjualan Harian</h3>
+                <p class="text-xs text-cyan-500 font-bold mb-4">Run Rate (Kecepatan Sales)</p>
+                <div class="text-3xl font-black text-white drop-shadow-md" id="pro-runrate-omset">Rp 0</div>
+                <div class="text-[10px] text-gray-400 mt-2 font-bold bg-gray-800 inline-block px-2 py-1 rounded">Pembagi: <span id="pro-runrate-days" class="text-cyan-400">0 Hari</span> Aktif</div>
+            </div>
+            <div id="card-proyeksi-omset" class="glass p-5 rounded-2xl border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)] relative overflow-hidden transition-all">
+                <h3 class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Proyeksi Akhir Bulan</h3>
+                <p class="text-xs text-gray-400 font-bold mb-4">Estimasi Total Omset vs Master Target</p>
+                <div class="text-3xl font-black text-emerald-400 drop-shadow-md mb-1" id="pro-est-omset">Rp 0</div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-700/50">
+                    <div class="text-xs text-gray-400">Master Target: <span id="pro-mst-omset" class="font-bold text-gray-200">Rp 0</span></div>
+                    <div id="pro-stat-omset" class="text-[10px] font-black px-2 py-1 rounded">EST: 0%</div>
+                </div>
+            </div>
+            <div id="card-proyeksi-profit" class="glass p-5 rounded-2xl border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)] relative overflow-hidden transition-all">
+                <h3 class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">Proyeksi Akhir Bulan</h3>
+                <p class="text-xs text-gray-400 font-bold mb-4">Estimasi Total Profit vs Master Target</p>
+                <div class="text-3xl font-black text-amber-400 drop-shadow-md mb-1" id="pro-est-profit">Rp 0</div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-700/50">
+                    <div class="text-xs text-gray-400">Master Target: <span id="pro-mst-profit" class="font-bold text-gray-200">Rp 0</span></div>
+                    <div id="pro-stat-profit" class="text-[10px] font-black px-2 py-1 rounded">EST: 0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+            <div class="glass rounded-3xl p-5 border border-emerald-500/20 shadow-lg flex flex-col">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-emerald-500/20 pb-3 gap-2">
+                    <h3 class="font-black text-emerald-400 text-base uppercase tracking-wider"><i class="fas fa-trophy mr-2"></i> Top 3 Departemen</h3>
+                    <div class="flex flex-wrap gap-1 bg-gray-900/50 p-1 rounded-lg border border-gray-700/50">
+                        <button id="btn-pro-top-omset" onclick="window.drawProLeaderboard('top', 'omset')" class="px-2 py-1 rounded text-[9px] font-black transition-all bg-emerald-900/60 text-emerald-400 border border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]">Omset</button>
+                        <button id="btn-pro-top-profit" onclick="window.drawProLeaderboard('top', 'profit')" class="px-2 py-1 rounded text-[9px] font-bold transition-all bg-gray-800 text-gray-500 border border-gray-700 hover:text-gray-300">Profit</button>
+                        <button id="btn-pro-top-beli" onclick="window.drawProLeaderboard('top', 'beli')" class="px-2 py-1 rounded text-[9px] font-bold transition-all bg-gray-800 text-gray-500 border border-gray-700 hover:text-gray-300">Pembelian</button>
+                        <button id="btn-pro-top-dsi" onclick="window.drawProLeaderboard('top', 'dsi')" class="px-2 py-1 rounded text-[9px] font-bold transition-all bg-gray-800 text-gray-500 border border-gray-700 hover:text-gray-300">DSI</button>
+                    </div>
+                </div>
+                <div id="pro-leaderboard-top" class="space-y-3 flex-grow">
+                    <!-- Dinamis melalui JS -->
+                </div>
+            </div>
+            <div class="glass rounded-3xl p-5 border border-rose-500/20 shadow-lg flex flex-col">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-rose-500/20 pb-3 gap-2">
+                    <h3 class="font-black text-rose-400 text-base uppercase tracking-wider"><i class="fas fa-exclamation-circle mr-2"></i> 3 Dept Perhatian</h3>
+                    <div class="flex flex-wrap gap-1 bg-gray-900/50 p-1 rounded-lg border border-gray-700/50">
+                        <button id="btn-pro-bottom-omset" onclick="window.drawProLeaderboard('bottom', 'omset')" class="px-2 py-1 rounded text-[9px] font-black transition-all bg-rose-900/60 text-rose-400 border border-rose-500/50 shadow-[0_0_8px_rgba(244,63,94,0.3)]">Omset</button>
+                        <button id="btn-pro-bottom-profit" onclick="window.drawProLeaderboard('bottom', 'profit')" class="px-2 py-1 rounded text-[9px] font-bold transition-all bg-gray-800 text-gray-500 border border-gray-700 hover:text-gray-300">Profit</button>
+                        <button id="btn-pro-bottom-beli" onclick="window.drawProLeaderboard('bottom', 'beli')" class="px-2 py-1 rounded text-[9px] font-bold transition-all bg-gray-800 text-gray-500 border border-gray-700 hover:text-gray-300">Pembelian</button>
+                        <button id="btn-pro-bottom-dsi" onclick="window.drawProLeaderboard('bottom', 'dsi')" class="px-2 py-1 rounded text-[9px] font-bold transition-all bg-gray-800 text-gray-500 border border-gray-700 hover:text-gray-300">DSI</button>
+                    </div>
+                </div>
+                <div id="pro-leaderboard-bottom" class="space-y-3 flex-grow">
+                    <!-- Dinamis melalui JS -->
+                </div>
             </div>
         </div>
     </div>
@@ -520,14 +646,22 @@
         window.initInputs = function() {
             const t = new Date(); let hB = ''; window.bln.forEach((b, i) => { hB += `<option value="${i+1}">${b}</option>`; }); hB += `<optgroup label="Spesial"><option value="Q1">Kuartal 1 (Jan-Mar)</option><option value="Q2">Kuartal 2 (Apr-Jun)</option><option value="Q3">Kuartal 3 (Jul-Sep)</option><option value="Q4">Kuartal 4 (Okt-Des)</option><option value="S1">Semester 1 (Jan-Jun)</option><option value="S2">Semester 2 (Jul-Des)</option></optgroup>`;
             let elBulan = document.getElementById('in-bulan'); if(elBulan) { elBulan.innerHTML = ''; window.bln.forEach((b, i) => { elBulan.innerHTML += `<option value="${i+1}">${b}</option>`; }); elBulan.value = t.getMonth() + 1; }
+            
             let elHarBln = document.getElementById('harFilterBulan'); if(elHarBln) { elHarBln.innerHTML = hB; elHarBln.value = t.getMonth() + 1; }
+            let elGrfBln = document.getElementById('grfFilterBulan'); if(elGrfBln) { elGrfBln.innerHTML = hB; elGrfBln.value = t.getMonth() + 1; }
+            let elProBln = document.getElementById('proFilterBulan'); if(elProBln) { elProBln.innerHTML = hB; elProBln.value = t.getMonth() + 1; }
+            
             let elDirBln = document.getElementById('dirFilterBulan'); if(elDirBln) { elDirBln.innerHTML = '<option value="ALL">📅 Full Year (YTD)</option>' + hB; elDirBln.value = 'ALL'; }
             let elDbBln = document.getElementById('dbFilterBulan'); if(elDbBln) { elDbBln.innerHTML = '<option value="">📅 Semua Bulan</option>' + hB; }
+            
             let hT = ''; for(let y=2022; y<=2030; y++) { hT += `<option value="${y}">${y}</option>`; }
             let elTahun = document.getElementById('in-tahun'); if(elTahun) { elTahun.innerHTML = hT; elTahun.value = t.getFullYear(); }
             let elHarThn = document.getElementById('harFilterTahun'); if(elHarThn) { elHarThn.innerHTML = hT; elHarThn.value = t.getFullYear(); }
+            let elGrfThn = document.getElementById('grfFilterTahun'); if(elGrfThn) { elGrfThn.innerHTML = hT; elGrfThn.value = t.getFullYear(); }
+            let elProThn = document.getElementById('proFilterTahun'); if(elProThn) { elProThn.innerHTML = hT; elProThn.value = t.getFullYear(); }
             let elDirThn = document.getElementById('dirFilterTahun'); if(elDirThn) { elDirThn.innerHTML = hT; elDirThn.value = t.getFullYear(); }
             let elDbThn = document.getElementById('dbFilterTahun'); if(elDbThn) { elDbThn.innerHTML = '<option value="">📅 Semua Tahun</option>' + hT; }
+            
             let elTgl = document.getElementById('in-tanggal'); if(elTgl) { const year = t.getFullYear(); const month = String(t.getMonth() + 1).padStart(2, '0'); const day = String(t.getDate()).padStart(2, '0'); elTgl.value = `${year}-${month}-${day}`; }
             let dbTglDrop = document.getElementById('dbFilterTanggalDrop'); if(dbTglDrop) { let opts = `<option value="ALL">🗓️ Tampilkan Semua Tanggal</option><option value="0">👑 Master (Target Bulanan)</option>`; for(let i=1; i<=31; i++) { opts += `<option value="${i}">Tanggal ${i}</option>`; } opts += `<option value="-1">⚠️ Data Invalid</option>`; dbTglDrop.innerHTML = opts; }
             
@@ -538,7 +672,7 @@
         };
 
         window.setupNavigation = function() {
-            const pgs = ['harian', 'direktori', 'parameter'];
+            const pgs = ['harian', 'direktori', 'grafik', 'proyeksi', 'parameter'];
             pgs.forEach(p => {
                 const btn = document.getElementById(`btn-nav-${p}`);
                 if(btn) {
@@ -548,8 +682,17 @@
                             let b = document.getElementById(`btn-nav-${pg}`); if(b) b.className = 'nav-btn flex-1 px-3 py-3 rounded-xl bg-gray-900/40 border border-gray-700 text-gray-400 hover:border-cyan-500 hover:text-cyan-400 transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer'; 
                         });
                         let elAct = document.getElementById(`page-${p}`); if(elAct) elAct.classList.remove('hidden');
-                        btn.className = 'nav-btn flex-1 px-3 py-3 rounded-xl bg-emerald-600 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer border border-emerald-400/30';
-                        if(p==='harian') window.renderHarian(); if(p==='direktori') window.renderDirektori(); if(p==='parameter') window.renderDatabase();
+                        
+                        // Set active class based on page
+                        let activeColor = p==='harian' ? 'emerald' : (p==='grafik' ? 'blue' : (p==='proyeksi' ? 'purple' : 'cyan'));
+                        if(p==='parameter') activeColor = 'fuchsia';
+                        btn.className = `nav-btn flex-1 px-3 py-3 rounded-xl bg-${activeColor}-600 text-white shadow-[0_0_15px_rgba(var(--tw-colors-${activeColor}-500),0.5)] transition-all font-bold min-w-[100px] max-w-[180px] flex items-center justify-center gap-2 cursor-pointer border border-${activeColor}-400/30`;
+                        
+                        if(p==='harian') window.renderHarian(); 
+                        if(p==='direktori') window.renderDirektori(); 
+                        if(p==='grafik') window.renderGrafik();
+                        if(p==='proyeksi') window.renderProyeksi();
+                        if(p==='parameter') window.renderDatabase();
                     });
                 }
             });
@@ -616,7 +759,7 @@
                 el.innerHTML = `
                     <div class="glass p-5 rounded-2xl border-t-4 border-blue-500 flex flex-col justify-center shadow-[0_0_20px_rgba(59,130,246,0.15)] group hover:-translate-y-1 transition-transform"><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-3 flex items-center gap-2"><i class="fas fa-history text-blue-500"></i> MoM (${lblPeriode})</p><div class="flex justify-between items-end mb-3 border-b border-gray-700/50 pb-3"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Omset Bulan Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(momO).toLocaleString()}</span></div>${window.getTrendBadge(momPctO)}</div><div class="flex justify-between items-end"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Profit Bulan Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(momP).toLocaleString()}</span></div>${window.getTrendBadge(momPctP)}</div></div>
                     <div class="glass p-5 rounded-2xl border-t-4 border-purple-500 flex flex-col justify-center shadow-[0_0_20px_rgba(168,85,247,0.15)] group hover:-translate-y-1 transition-transform"><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-3 flex items-center gap-2"><i class="fas fa-calendar-alt text-purple-500"></i> YoY (${lblPeriode})</p><div class="flex justify-between items-end mb-3 border-b border-gray-700/50 pb-3"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Omset Tahun Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(yoyO).toLocaleString()}</span></div>${window.getTrendBadge(yoyPctO)}</div><div class="flex justify-between items-end"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Profit Tahun Lalu</p><span class="text-sm font-bold text-gray-300">Rp ${Math.round(yoyP).toLocaleString()}</span></div>${window.getTrendBadge(yoyPctP)}</div></div>
-                    <div class="glass p-5 rounded-2xl border-t-4 border-${dsiCol}-500 flex flex-col justify-center shadow-[0_0_20px_rgba(${dsiShadow},0.15)] group hover:-translate-y-1 transition-transform relative overflow-hidden"><div class="absolute right-[-10px] bottom-[-10px] opacity-10 text-8xl text-${dsiCol}-500 pointer-events-none"><i class="fas fa-stopwatch"></i></div><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-2 flex items-center gap-2 relative z-10"><i class="fas fa-hourglass-half text-${dsiCol}-500"></i> DSI (Umur Persediaan Harian)</p><div class="flex items-end gap-2 mt-2 relative z-10"><h3 class="text-5xl font-black text-${dsiCol}-400 tracking-tighter drop-shadow-lg">${umurSedia}</h3><span class="text-sm text-gray-400 font-bold mb-1.5 uppercase tracking-wide">Hari</span></div><p class="text-[9px] text-${dsiCol}-300/50 mt-3 font-semibold relative z-10 bg-gray-900/50 p-1.5 rounded inline-block border border-gray-800">*(Stok / HPP) x ${rangeHari} Hari</p></div>
+                    <div class="glass p-5 rounded-2xl border-t-4 border-${dsiCol}-500 flex flex-col justify-center shadow-[0_0_20px_rgba(${dsiShadow},0.15)] group hover:-translate-y-1 transition-transform relative overflow-hidden"><div class="absolute right-[-10px] bottom-[-10px] opacity-10 text-8xl text-${dsiCol}-500 pointer-events-none"><i class="fas fa-stopwatch"></i></div><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-2 flex items-center gap-2 relative z-10"><i class="fas fa-hourglass-half text-${dsiCol}-500"></i> (Umur Persediaan Harian)</p><div class="flex items-end gap-2 mt-2 relative z-10"><h3 class="text-5xl font-black text-${dsiCol}-400 tracking-tighter drop-shadow-lg">${umurSedia}</h3><span class="text-sm text-gray-400 font-bold mb-1.5 uppercase tracking-wide">Hari</span></div><p class="text-[9px] text-${dsiCol}-300/50 mt-3 font-semibold relative z-10 bg-gray-900/50 p-1.5 rounded inline-block border border-gray-800">*(Stok / HPP) x ${rangeHari} Hari</p></div>
                     <div class="glass p-5 rounded-2xl border-t-4 border-${bCol}-500 flex flex-col justify-center shadow-[0_0_20px_rgba(0,0,0,0.15)] group hover:-translate-y-1 transition-transform relative overflow-hidden"><p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-3 flex items-center justify-between"><span class="flex items-center gap-2"><i class="fas fa-shopping-cart text-${bCol}-500"></i> Kontrol Pembelian</span><span class="bg-${bCol}-900/80 text-${bCol}-300 px-2 py-0.5 rounded text-[8px] border border-${bCol}-500 font-black tracking-wider shadow-md ${anim}">${bStat}</span></p><div class="flex justify-between items-end mb-3 border-b border-gray-700/50 pb-3"><div><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Aktual Pembelian</p><span class="text-sm font-bold text-${bCol}-400 drop-shadow-md">Rp ${Math.round(aktB).toLocaleString()}</span></div><div class="text-right"><p class="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Target Beli Berjalan</p><span class="text-xs font-bold text-gray-300">Rp ${Math.round(tgtB).toLocaleString()}</span></div></div><div><div class="w-full bg-gray-800 rounded-full h-1.5 shadow-inner mt-1"><div class="bg-${bCol}-500 h-1.5 rounded-full shadow-[0_0_8px_currentColor]" style="width: ${Math.min(pctVal, 100)}%"></div></div><div class="flex justify-between items-center mt-1"><span class="text-[9px] text-gray-500 font-bold">Pencapaian</span><span class="text-[10px] font-black text-${bCol}-400">${pctVal}%</span></div></div></div>
                 `;
             }
@@ -1278,6 +1421,249 @@
             }).sort((a,b) => b.tahun - a.tahun || b.bulan - a.bulan || b.tanggal - a.tanggal);
         };
 
+        window.chartInstances = {};
+        window.renderGrafik = function() {
+            if(!document.getElementById('page-grafik') || document.getElementById('page-grafik').classList.contains('hidden')) return;
+
+            const oF = document.getElementById('grfFilterOutlet')?.value || ""; 
+            const divF = document.getElementById('grfFilterDivisi')?.value || ""; 
+            
+            const vBulan = document.getElementById('grfFilterBulan')?.value || (new Date().getMonth() + 1).toString(); 
+            const arrBulan = window.getBulanArray(vBulan); const bF = arrBulan[arrBulan.length - 1]; 
+            const tF = parseInt(document.getElementById('grfFilterTahun')?.value) || new Date().getFullYear();
+
+            let baseData = window.data.filter(d => (oF === "" || window.isOutletMatch(d.outlet, oF)) && (divF === "" || window.getDivisi(d.dept) === divF) && arrBulan.includes(d.bulan) && d.tahun === tF && d.outlet !== 'Corporate');
+
+            // 1. Data untuk Line Chart (Tren Harian)
+            let dailyAgg = {};
+            for(let i=1; i<=31; i++) { dailyAgg[i] = { aO:0, aP:0, tO:0, tP:0 }; }
+            
+            baseData.forEach(d => {
+                if(d.tanggal >= 1 && d.tanggal <= 31) {
+                    dailyAgg[d.tanggal].aO += (d.omset||0);
+                    dailyAgg[d.tanggal].aP += (d.profit||0);
+                    dailyAgg[d.tanggal].tO += (d.target||0);
+                    dailyAgg[d.tanggal].tP += (d.tProfit||0);
+                }
+            });
+
+            let labelsLine = []; let dataLineAktO = []; let dataLineTgtO = []; let dataLineAktP = [];
+            for(let i=1; i<=31; i++) {
+                labelsLine.push(i);
+                dataLineAktO.push(dailyAgg[i].aO);
+                dataLineTgtO.push(dailyAgg[i].tO);
+                dataLineAktP.push(dailyAgg[i].aP);
+            }
+
+            // 2. Data untuk Doughnut Chart (Kontribusi Dept)
+            let deptAgg = {};
+            baseData.forEach(d => {
+                if(d.tanggal >= 1 && d.tanggal <= 31) {
+                    let deptName = window.normalizeName(d.dept, 'dept');
+                    if(!deptAgg[deptName]) deptAgg[deptName] = 0;
+                    deptAgg[deptName] += (d.omset||0);
+                }
+            });
+
+            let labelsDoughnut = Object.keys(deptAgg).sort((a,b) => deptAgg[b] - deptAgg[a]); // Sort descending
+            let dataDoughnut = labelsDoughnut.map(k => deptAgg[k]);
+            
+            let bgColorsDoughnut = ['#06b6d4', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#3b82f6', '#f43f5e', '#14b8a6', '#f97316', '#6366f1', '#84cc16', '#eab308'];
+
+            // Setup / Refresh Chart.js Instances
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+
+            if(window.chartInstances.trend) window.chartInstances.trend.destroy();
+            const ctxTrend = document.getElementById('chartTrendHarian');
+            if(ctxTrend) {
+                window.chartInstances.trend = new Chart(ctxTrend, {
+                    type: 'line',
+                    data: {
+                        labels: labelsLine,
+                        datasets: [
+                            { label: 'Aktual Omset', data: dataLineAktO, borderColor: '#06b6d4', backgroundColor: 'rgba(6, 182, 212, 0.1)', borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#06b6d4', fill: true, tension: 0.4 },
+                            { label: 'Target Omset', data: dataLineTgtO, borderColor: '#f59e0b', borderWidth: 2, borderDash: [5, 5], pointRadius: 0, tension: 0.1 },
+                            { label: 'Aktual Profit', data: dataLineAktP, borderColor: '#10b981', borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#10b981', tension: 0.4 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }, tooltip: { callbacks: { label: function(context) { return context.dataset.label + ': Rp ' + context.parsed.y.toLocaleString(); } } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } }, x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } } } }
+                });
+            }
+
+            if(window.chartInstances.contrib) window.chartInstances.contrib.destroy();
+            const ctxContrib = document.getElementById('chartDeptContrib');
+            if(ctxContrib) {
+                window.chartInstances.contrib = new Chart(ctxContrib, {
+                    type: 'doughnut',
+                    data: { labels: labelsDoughnut, datasets: [{ data: dataDoughnut, backgroundColor: bgColorsDoughnut, borderWidth: 0, hoverOffset: 10 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { let total = context.dataset.data.reduce((a, b) => a + b, 0); let pct = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0; return ` ${context.label}: Rp ${context.parsed.toLocaleString()} (${pct}%)`; } } } } }
+                });
+            }
+        };
+
+        window._proActiveTop = 'omset';
+        window._proActiveBot = 'omset';
+        window._proDeptPerfData = [];
+
+        window.drawProLeaderboard = function(type, metric) {
+            if(type === 'top') window._proActiveTop = metric;
+            else window._proActiveBot = metric;
+
+            let arr = [...window._proDeptPerfData];
+            
+            if(metric === 'omset') arr = arr.filter(d => d.tgtO > 0 || d.aktO > 0);
+            if(metric === 'profit') arr = arr.filter(d => d.tgtP > 0 || d.aktP > 0);
+            if(metric === 'beli') arr = arr.filter(d => d.tgtB > 0 || d.aktB > 0);
+            if(metric === 'dsi') arr = arr.filter(d => d.dsi > 0);
+
+            arr.sort((a, b) => {
+                if(metric === 'omset') return type === 'top' ? b.achO - a.achO : a.achO - b.achO;
+                if(metric === 'profit') return type === 'top' ? b.achP - a.achP : a.achP - b.achP;
+                if(metric === 'beli') return type === 'top' ? a.achB - b.achB : b.achB - a.achB;
+                if(metric === 'dsi') return type === 'top' ? a.dsi - b.dsi : b.dsi - a.dsi;
+            });
+
+            let targetArr = arr.slice(0, 3);
+            let html = '';
+            
+            ['omset', 'profit', 'beli', 'dsi'].forEach(m => {
+                let btn = document.getElementById(`btn-pro-${type}-${m}`);
+                if(btn) {
+                    let cClasses = '';
+                    if(m === metric) {
+                        if(type === 'top') cClasses = 'px-2 py-1 rounded text-[9px] font-black transition-all bg-emerald-900/60 text-emerald-400 border border-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]';
+                        else cClasses = 'px-2 py-1 rounded text-[9px] font-black transition-all bg-rose-900/60 text-rose-400 border border-rose-500/50 shadow-[0_0_8px_rgba(244,63,94,0.3)]';
+                    } else {
+                        cClasses = 'px-2 py-1 rounded text-[9px] font-bold transition-all bg-gray-800 text-gray-500 border border-gray-700 hover:text-gray-300';
+                    }
+                    btn.className = cClasses;
+                }
+            });
+
+            if(targetArr.length === 0) {
+                html = `<div class="text-gray-500 text-xs italic flex items-center h-full justify-center opacity-50 py-6">Belum ada data memadai.</div>`;
+            } else {
+                targetArr.forEach((dp, idx) => {
+                    let rank = idx + 1; let isTop = type === 'top';
+                    let rankIcon = isTop ? (rank===1?'<i class="fas fa-medal text-yellow-400 text-lg drop-shadow-md"></i>' : (rank===2?'<i class="fas fa-medal text-gray-300 text-base"></i>':'<i class="fas fa-medal text-amber-600 text-sm"></i>')) : '<i class="fas fa-exclamation-triangle text-rose-500 opacity-70"></i>';
+                    let vS = ''; let sS = ''; let vC = isTop?'text-emerald-400':'text-rose-400';
+                    if(metric === 'omset') { vS = dp.achO.toFixed(1) + '%'; sS = `Rp ${Math.round(dp.aktO).toLocaleString()}`; }
+                    if(metric === 'profit') { vS = dp.achP.toFixed(1) + '%'; sS = `Rp ${Math.round(dp.aktP).toLocaleString()}`; }
+                    if(metric === 'beli') { vS = dp.achB.toFixed(1) + '%'; sS = `Rp ${Math.round(dp.aktB).toLocaleString()}`; }
+                    if(metric === 'dsi') { vS = dp.dsi.toFixed(1) + ' Hr'; sS = `Stok: Rp ${Math.round(dp.stock).toLocaleString()}`; }
+
+                    html += `<div class="flex items-center justify-between bg-gray-900/60 p-3 rounded-xl border border-gray-700/50 hover:bg-gray-800 transition-colors"><div class="flex items-center gap-3"><div class="w-8 text-center">${rankIcon}</div><div><h4 class="font-bold text-gray-200 text-sm">${dp.name}</h4><p class="text-[9px] text-gray-500 mt-0.5 uppercase">Aktual: <span class="font-bold text-gray-400">${sS}</span></p></div></div><div class="text-right"><span class="font-black ${vC} text-lg">${vS}</span></div></div>`;
+                });
+            }
+            document.getElementById(`pro-leaderboard-${type}`).innerHTML = html;
+        };
+
+        window.renderProyeksi = function() {
+            if(!document.getElementById('page-proyeksi') || document.getElementById('page-proyeksi').classList.contains('hidden')) return;
+
+            const oF = document.getElementById('proFilterOutlet')?.value || ""; 
+            const divF = document.getElementById('proFilterDivisi')?.value || ""; 
+            const deptF = document.getElementById('proFilterDept')?.value || ""; 
+            const vBulan = document.getElementById('proFilterBulan')?.value || (new Date().getMonth() + 1).toString(); 
+            const arrBulan = window.getBulanArray(vBulan); const bF = arrBulan[arrBulan.length - 1]; 
+            const tF = parseInt(document.getElementById('proFilterTahun')?.value) || new Date().getFullYear();
+
+            const dim = new Date(tF, bF, 0).getDate(); // Days in specific month
+
+            let baseData = window.data.filter(d => (oF === "" || window.isOutletMatch(d.outlet, oF)) && (divF === "" || window.getDivisi(d.dept) === divF) && (deptF === "" || (deptF === 'LAINNYA_UNCATEGORIZED' ? window.isUnknownDept(d.dept) : window.normalizeName(d.dept, 'dept') === deptF)) && arrBulan.includes(d.bulan) && d.tahun === tF);
+
+            // 1. Dapatkan Master Target & Agregasi Departemen
+            let masterOmset = 0, masterProfit = 0;
+            let deptStats = {}; let stockTracker = {}; let lastTgl = 0;
+
+            baseData.forEach(d => {
+                let isCorp = d.outlet === 'Corporate';
+                let dName = window.normalizeName(d.dept, 'dept');
+                if(dName === 'Corporate') return;
+
+                if(!deptStats[dName]) deptStats[dName] = { name: dName, aktO:0, aktP:0, aktB:0, mO:0, mP:0, dO:0, dP:0, stock:0, hasMaster:false };
+
+                if(d.tanggal === 0) {
+                    masterOmset += (d.target||0); masterProfit += (d.tProfit||0);
+                    deptStats[dName].mO += (d.target||0); deptStats[dName].mP += (d.tProfit||0); deptStats[dName].hasMaster = true;
+                } else if (d.tanggal >= 1 && d.tanggal <= 31) {
+                    if(d.tanggal > lastTgl) lastTgl = d.tanggal;
+                    deptStats[dName].aktO += isCorp ? 0 : (d.omset||0);
+                    deptStats[dName].aktP += isCorp ? 0 : (d.profit||0);
+                    deptStats[dName].aktB += isCorp ? 0 : (d.pembelian||0);
+                    deptStats[dName].dO += (d.target||0);
+                    deptStats[dName].dP += (d.tProfit||0);
+                    
+                    let k = d.outlet + "___" + dName;
+                    if(!stockTracker[k] || d.tanggal >= stockTracker[k].tgl) {
+                        if(d.stock !== 0 || !stockTracker[k]) stockTracker[k] = { tgl: d.tanggal, val: d.stock||0, dept: dName };
+                    }
+                }
+            });
+
+            Object.values(stockTracker).forEach(st => { if(deptStats[st.dept]) deptStats[st.dept].stock += st.val; });
+
+            let activeDays = lastTgl > 0 ? lastTgl : 1;
+            let proporsi = lastTgl > 0 ? (lastTgl / dim) : 0;
+            let aktOmset = 0, aktProfit = 0;
+
+            let finalArr = Object.values(deptStats).map(dp => {
+                aktOmset += dp.aktO; aktProfit += dp.aktP;
+
+                let tO = dp.hasMaster ? dp.mO * proporsi : dp.dO;
+                let tP = dp.hasMaster ? dp.mP * proporsi : dp.dP;
+                if(dp.hasMaster && dp.mP === 0 && dp.dO > 0) tP = tO * (dp.dP / dp.dO); // Fallback margin
+                let tB = tO - tP;
+
+                let achO = tO > 0 ? (dp.aktO / tO) * 100 : 0;
+                let achP = tP > 0 ? (dp.aktP / tP) * 100 : 0;
+                let achB = tB > 0 ? (dp.aktB / tB) * 100 : 0;
+
+                let hpp = dp.aktO - dp.aktP;
+                let dsi = hpp > 0 ? (dp.stock / hpp) * activeDays : 0;
+
+                return { name: dp.name, aktO: dp.aktO, aktP: dp.aktP, aktB: dp.aktB, stock: dp.stock, tgtO: tO, tgtP: tP, tgtB: tB, achO, achP, achB, dsi };
+            });
+
+            window._proDeptPerfData = finalArr;
+            window.drawProLeaderboard('top', window._proActiveTop);
+            window.drawProLeaderboard('bottom', window._proActiveBot);
+
+            // 3. Forecasting Logic (Run Rate)
+            let runRateOmset = aktOmset / activeDays;
+            let runRateProfit = aktProfit / activeDays;
+
+            let estAkhirBulanOmset = runRateOmset * dim;
+            let estAkhirBulanProfit = runRateProfit * dim;
+
+            let pctEstOmset = masterOmset > 0 ? (estAkhirBulanOmset / masterOmset) * 100 : 0;
+            let pctEstProfit = masterProfit > 0 ? (estAkhirBulanProfit / masterProfit) * 100 : 0;
+
+            document.getElementById('pro-runrate-omset').innerText = `Rp ${Math.round(runRateOmset).toLocaleString()}`;
+            document.getElementById('pro-runrate-days').innerText = `${activeDays} Hari`;
+
+            document.getElementById('pro-est-omset').innerText = `Rp ${Math.round(estAkhirBulanOmset).toLocaleString()}`;
+            document.getElementById('pro-mst-omset').innerText = `Rp ${Math.round(masterOmset).toLocaleString()}`;
+            
+            let statOmsetEl = document.getElementById('pro-stat-omset');
+            statOmsetEl.innerText = `EST: ${pctEstOmset.toFixed(1)}%`;
+            let cardOmset = document.getElementById('card-proyeksi-omset');
+            if(pctEstOmset >= 100) { statOmsetEl.className = "text-[10px] font-black px-2 py-1 rounded bg-emerald-900/80 text-emerald-300"; cardOmset.className = "glass p-5 rounded-2xl border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]"; }
+            else if (pctEstOmset >= 90) { statOmsetEl.className = "text-[10px] font-black px-2 py-1 rounded bg-amber-900/80 text-amber-300"; cardOmset.className = "glass p-5 rounded-2xl border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]"; }
+            else { statOmsetEl.className = "text-[10px] font-black px-2 py-1 rounded bg-rose-900/80 text-rose-300 animate-pulse"; cardOmset.className = "glass p-5 rounded-2xl border border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.2)]"; }
+
+            document.getElementById('pro-est-profit').innerText = `Rp ${Math.round(estAkhirBulanProfit).toLocaleString()}`;
+            document.getElementById('pro-mst-profit').innerText = `Rp ${Math.round(masterProfit).toLocaleString()}`;
+            
+            let statProfitEl = document.getElementById('pro-stat-profit');
+            statProfitEl.innerText = `EST: ${pctEstProfit.toFixed(1)}%`;
+            let cardProfit = document.getElementById('card-proyeksi-profit');
+            if(pctEstProfit >= 100) { statProfitEl.className = "text-[10px] font-black px-2 py-1 rounded bg-emerald-900/80 text-emerald-300"; cardProfit.className = "glass p-5 rounded-2xl border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]"; }
+            else if (pctEstProfit >= 90) { statProfitEl.className = "text-[10px] font-black px-2 py-1 rounded bg-amber-900/80 text-amber-300"; cardProfit.className = "glass p-5 rounded-2xl border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]"; }
+            else { statProfitEl.className = "text-[10px] font-black px-2 py-1 rounded bg-rose-900/80 text-rose-300 animate-pulse"; cardProfit.className = "glass p-5 rounded-2xl border border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.2)]"; }
+        };
+
         window.renderDatabase = function() {
             const tb = document.getElementById('db-list'), th = document.getElementById('db-thead'), tf = document.getElementById('db-tfoot'); if(!tb || !th || !tf) return;
             th.innerHTML = `<tr class="text-[11px] font-black text-gray-400 bg-gray-900 shadow-md uppercase tracking-wider"><th class="p-4 text-center rounded-tl-xl w-10"><input type="checkbox" id="cb-db-all" class="w-4 h-4 cursor-pointer accent-red-500" onchange="window.toggleAllDbCb(this)"></th><th class="p-4 text-left">Tgl</th><th class="p-4 text-left">Bulan</th><th class="p-4 text-left text-cyan-400">Outlet & Dept</th><th class="p-4 text-right">Target (O/P/B)</th><th class="p-4 text-right text-emerald-400">Aktual (O/P/B)</th><th class="p-4 text-right text-fuchsia-400">Stok Akhir</th><th class="p-4 text-center rounded-tr-xl">Aksi</th></tr>`;
@@ -1313,8 +1699,11 @@
             const calcA = () => { let o=parseFloat(inAO.value)||0; let p=parseFloat(inAP.value)||0; let dM = document.getElementById('display-in-amargin'); if(dM) dM.innerText = o>0?((p/o)*100).toFixed(2)+'%':'0.00%'; };
             if(inTO) inTO.addEventListener('input', calcT); if(inTP) inTP.addEventListener('input', calcT); if(inAO) inAO.addEventListener('input', calcA); if(inAP) inAP.addEventListener('input', calcA);
 
+            // Menambahkan Trigger Event Listener untuk Halaman Baru
             document.querySelectorAll('#harFilterOutlet, #harFilterDivisi, #harFilterDept, #harFilterBulan, #harFilterTahun, #harFilterTglAwal, #harFilterTglAkhir').forEach(el => el.addEventListener('change', window.renderHarian));
             document.querySelectorAll('#dirFilterOutlet, #dirFilterDivisi, #dirFilterDept, #dirFilterBulan, #dirFilterTahun').forEach(el => el.addEventListener('change', window.renderDirektori));
+            document.querySelectorAll('#grfFilterOutlet, #grfFilterDivisi, #grfFilterBulan, #grfFilterTahun').forEach(el => el.addEventListener('change', window.renderGrafik));
+            document.querySelectorAll('#proFilterOutlet, #proFilterDivisi, #proFilterDept, #proFilterBulan, #proFilterTahun').forEach(el => el.addEventListener('change', window.renderProyeksi));
             document.querySelectorAll('#dbFilterOutlet, #dbFilterDept, #dbFilterBulan, #dbFilterTahun, #dbFilterTanggalDrop').forEach(el => el.addEventListener('change', window.renderDatabase));
             
             let btnCekAnomali = document.getElementById('btn-cek-anomali');
@@ -1358,7 +1747,7 @@
                 const pl = { id: id, outlet: document.getElementById('in-outlet').value || 'Corporate', dept: dpt, tanggal: tgl, bulan: parseInt(document.getElementById('in-bulan').value), tahun: parseInt(document.getElementById('in-tahun').value), target: to, tProfit: tp, tPembelian: tb, omset: ao, profit: ap, pembelian: ab, stock: m==='bulanan'?0:(parseFloat(document.getElementById('in-stock').value)||0) };
                 
                 if (window.fsSaveData && window.isCloudConnected) { window.fsSaveData(pl); window.showToast("Data Tersimpan ke Cloud!", "emerald"); }
-                else { const ex = window.data.findIndex(x => x.id === id); if(ex > -1) window.data[ex]=pl; else window.data.push(pl); window.showToast("Data Tersimpan Lokal!", "emerald"); window.renderHarian(); window.renderDirektori(); window.renderDatabase(); }
+                else { const ex = window.data.findIndex(x => x.id === id); if(ex > -1) window.data[ex]=pl; else window.data.push(pl); window.showToast("Data Tersimpan Lokal!", "emerald"); window.renderHarian(); window.renderDirektori(); window.renderGrafik(); window.renderProyeksi(); window.renderDatabase(); }
                 window.clearForm();
             });
             document.body.appendChild(btnSaveReal);
@@ -1429,7 +1818,7 @@
                                 if (window.fsSaveBatchData && window.isCloudConnected) {
                                     try { updateProgress(40, "Upload Kilat..."); await window.fsSaveBatchData(newDataBatch, (p) => { updateProgress(40 + Math.floor(p * 0.6), "Sinkronisasi Cloud..."); }); updateProgress(100, "Selesai!"); setTimeout(() => { if(modal) { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 500); } window.showToast(`Upload Kilat ${count} baris ke Cloud Selesai! (${dupeCount} diupdate)`, "emerald"); }, 800); } 
                                     catch(err) { console.error(err); if(modal) { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 500); } window.showToast("Gagal upload Cloud!", "red"); }
-                                } else { updateProgress(100, "Selesai Lokal!"); setTimeout(() => { if(modal) { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 500); } window.showToast(`Berhasil import ${count} baris Lokal! (${dupeCount} diupdate)`, "emerald"); window.renderHarian(); window.renderDirektori(); window.renderDatabase(); }, 800); }
+                                } else { updateProgress(100, "Selesai Lokal!"); setTimeout(() => { if(modal) { modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 500); } window.showToast(`Berhasil import ${count} baris Lokal! (${dupeCount} diupdate)`, "emerald"); window.renderHarian(); window.renderDirektori(); window.renderGrafik(); window.renderProyeksi(); window.renderDatabase(); }, 800); }
                             }, 500);
                         } else { window.showToast(`Tidak ada data.`, "amber"); }
                     } catch(err) { window.showToast("Gagal membaca format Excel.", "red"); console.error(err); }
@@ -1615,7 +2004,7 @@
         window.lastCelebrationTrigger = "";
         setInterval(() => { const now = new Date(); const h = now.getHours().toString().padStart(2, '0'); const m = now.getMinutes().toString().padStart(2, '0'); const timeStr = `${h}:${m}`; const triggerTimes = ["08:00", "13:00", "16:00", "22:05"]; const triggerKey = now.toDateString() + "_" + timeStr; if (triggerTimes.includes(timeStr) && window.lastCelebrationTrigger !== triggerKey) { window.lastCelebrationTrigger = triggerKey; window.triggerCelebration(false); } }, 10000);
 
-        function initDashboard() { window.initInputs(); window.setupNavigation(); window.setupEventListeners(); window.renderHarian(); window.renderDirektori(); window.renderDatabase(); window.updateSyncIcon(); }
+        function initDashboard() { window.initInputs(); window.setupNavigation(); window.setupEventListeners(); window.renderHarian(); window.renderDirektori(); window.renderGrafik(); window.renderProyeksi(); window.renderDatabase(); window.updateSyncIcon(); }
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initDashboard); } else { initDashboard(); }
     </script>
 </body>
