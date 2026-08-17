@@ -39,19 +39,27 @@
 
     <header class="w-full max-w-5xl mx-auto relative z-10 mb-8 mt-4">
         <div class="flex items-center justify-center gap-3 mb-2">
-            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.2.6</h3>
+            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.2.7</h3>
             <button id="btn-login-sync" class="w-8 h-8 rounded-full bg-red-500/20 border border-red-500 text-red-500 flex items-center justify-center text-xs transition-all shadow-[0_0_10px_rgba(239,68,68,0.5)] cursor-pointer hover:scale-110" title="Offline / Terkunci" onclick="window.toggleLoginModal()">
                 <i id="icon-login-sync" class="fas fa-lock"></i>
             </button>
         </div>
         <div class="flex flex-col items-center justify-center mb-3">
-            <div class="flex items-center justify-center gap-4 md:gap-6">
-                <img id="header-logo" src="" alt="Corporate Logo" class="hidden h-20 md:h-28 object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-transform hover:scale-105 cursor-pointer" onclick="window.handleHeaderClick(true)" title="Klik untuk Login / Test Kembang Api">
-                <div class="text-center">
-                    <h1 class="font-heading text-5xl md:text-7xl font-black animate-neon-walk pb-1 leading-tight tracking-wide cursor-pointer" onclick="window.handleHeaderClick(true)">Reny SwalayanKu</h1>
+            <!-- Kontainer Flex Row untuk menahan Logo dan Teks sejajar menyamping -->
+            <div class="flex flex-row items-center justify-center gap-4 md:gap-6 w-full px-4">
+                <div id="logo-wrapper" class="relative group cursor-pointer shrink-0" onclick="window.handleHeaderClick(true)" title="Klik untuk Login / Test Kembang Api">
+                    <!-- Efek Cahaya (Glow) di belakang logo -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500 to-emerald-500 blur-xl opacity-40 group-hover:opacity-70 transition-opacity duration-500 rounded-3xl animate-pulse"></div>
+                    <!-- Wadah Kaca Logo -->
+                    <div class="relative bg-gray-900/60 p-2 md:p-3 rounded-2xl border border-gray-600/50 backdrop-blur-md shadow-2xl group-hover:border-cyan-400 transition-all duration-300 transform group-hover:-translate-y-1 flex items-center justify-center min-w-[60px] min-h-[60px]">
+                        <img id="header-logo" src="https://placehold.co/120x120/0f172a/06b6d4?text=RENY" alt="Corporate Logo" class="h-10 sm:h-14 md:h-16 w-auto object-contain transition-transform duration-500 group-hover:scale-110" onerror="this.onerror=null; this.src='https://placehold.co/120x120/0f172a/06b6d4?text=RENY'; this.title='Logo Asli Gagal Dimuat. Cek Link Anda.';">
+                    </div>
+                </div>
+                <div class="text-left flex flex-col justify-center">
+                    <h1 class="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black animate-neon-walk pb-1 leading-tight tracking-wide cursor-pointer" onclick="window.handleHeaderClick(true)">Reny SwalayanKu</h1>
                 </div>
             </div>
-            <p class="text-xs md:text-sm text-cyan-400 font-bold tracking-[0.2em] italic drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] mt-2">by Digital Code Solution</p>
+            <p class="text-xs md:text-sm text-cyan-400 font-bold tracking-[0.2em] italic drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] mt-2 text-center">by Digital Code Solution</p>
         </div>
     </header>
 
@@ -126,6 +134,7 @@
         </div>
 
         <div id="har-analisis-lanjutan" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
+        <div id="smart-insights-container" class="mb-6"></div>
         <div id="har-kontribusi-outlet" class="mb-6"></div>
         <div id="har-summary-divisi-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
 
@@ -501,14 +510,13 @@
     </div>
 
     <div id="modal-celebration" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] hidden flex items-center justify-center opacity-0 transition-opacity duration-500">
-        <div class="glass p-8 rounded-3xl w-[28rem] max-w-[90%] transform scale-95 transition-transform duration-500 border-2 border-emerald-500/50 shadow-[0_0_50px_rgba(16,185,129,0.3)] relative overflow-hidden flex flex-col items-center text-center">
-            <button onclick="window.closeCelebration()" class="absolute top-4 right-5 text-gray-400 hover:text-white transition-colors z-20"><i class="fas fa-times text-xl"></i></button>
-            <div class="absolute -top-20 -left-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl"></div><div class="absolute -bottom-20 -right-20 w-40 h-40 bg-amber-500/20 rounded-full blur-3xl"></div>
-            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 p-1 shadow-[0_0_30px_rgba(16,185,129,0.5)] mb-4 animate-bounce z-10 relative"><div class="w-full h-full bg-gray-900 rounded-full flex items-center justify-center text-3xl text-emerald-400"><i class="fas fa-trophy"></i></div></div>
-            <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 tracking-tight z-10 mb-1">TARGET TERCAPAI!</h2>
-            <p class="text-xs text-gray-300 font-bold mb-6 z-10">Laporan Pencapaian Kinerja Luar Biasa</p>
-            <div id="celebration-list" class="w-full flex flex-col gap-2 z-10 text-left max-h-60 overflow-y-auto pr-2 custom-scrollbar"></div>
-            <button onclick="window.closeCelebration()" class="mt-6 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] z-10">LANJUTKAN</button>
+        <div class="glass p-8 rounded-3xl w-full max-w-md transform scale-95 transition-transform duration-500 border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.3)] relative text-center">
+            <button onclick="window.closeCelebration()" class="absolute top-4 right-5 text-gray-400 hover:text-white transition-colors"><i class="fas fa-times text-xl"></i></button>
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-4xl text-white shadow-lg mx-auto mb-4 animate-bounce"><i class="fas fa-trophy"></i></div>
+            <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-2">TARGET TERCAPAI!</h2>
+            <p class="text-gray-300 text-sm mb-6">Pencapaian luar biasa hari ini!</p>
+            <div id="celebration-list" class="space-y-3 mb-6 text-left max-h-40 overflow-y-auto custom-scrollbar"></div>
+            <button onclick="window.closeCelebration()" class="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-black py-3 rounded-xl shadow-lg transition-transform hover:scale-[1.02]">LANJUTKAN</button>
         </div>
     </div>
 
@@ -562,7 +570,6 @@
                     const tDate = new Date(); 
                     const todayStr = tDate.getFullYear() + '-' + String(tDate.getMonth()+1).padStart(2,'0') + '-' + String(tDate.getDate()).padStart(2,'0');
                     
-                    // 1. SISTEM PENGUNJUNG HARIAN (FIRESTORE)
                     const dailyRef = doc(db, "kunjungan_harian", todayStr);
                     setDoc(dailyRef, { pengunjung: arrayUnion(user.uid) }, { merge: true }).catch(e => console.log("Gagal catat visit"));
                     
@@ -577,13 +584,12 @@
                         if(dV) { dV.innerText = "Error (Cek Rules)"; dV.parentElement.title = "Firestore Rules belum mengizinkan koleksi kunjungan_harian."; }
                     });
 
-                    // 2. SISTEM RADAR REALTIME AKTIF (FIRESTORE HEARTBEAT)
                     const presenceRef = doc(db, "koneksi_aktif", user.uid);
                     const updatePresence = () => {
                         setDoc(presenceRef, { lastActive: new Date().getTime(), uid: user.uid }, { merge: true }).catch(e => console.log(e));
                     };
                     updatePresence();
-                    setInterval(updatePresence, 30000); // Detak jantung tiap 30 detik
+                    setInterval(updatePresence, 30000); 
 
                     onSnapshot(collection(db, "koneksi_aktif"), (snap) => {
                         const now = new Date().getTime();
@@ -591,9 +597,9 @@
                         snap.forEach(d => {
                             const data = d.data();
                             if (data.lastActive) {
-                                if ((now - data.lastActive) < 60000) { // Dianggap aktif jika ada detak dlm 60 dtk terakhir
+                                if ((now - data.lastActive) < 60000) { 
                                     activeCount++;
-                                } else if ((now - data.lastActive) > 120000) { // Jika mati lebih dari 2 menit, hapus datanya
+                                } else if ((now - data.lastActive) > 120000) { 
                                     deleteDoc(doc(db, "koneksi_aktif", d.id)).catch(e => {});
                                 }
                             }
@@ -611,7 +617,19 @@
                     }, 5000);
 
                     onSnapshot(colRef, (snapshot) => { let temp = []; snapshot.forEach(d => { temp.push(d.data()); }); window.data = temp; if(typeof window.renderHarian === 'function') { window.renderHarian(); window.renderDirektori(); window.renderDatabase(); } });
-                    onSnapshot(logoRef, (docSnap) => { const lg = document.getElementById('header-logo'); const inLogo = document.getElementById('in-logo-url'); if (docSnap.exists()) { const url = docSnap.data().url; if(lg && url) { lg.src = url; lg.classList.remove('hidden'); } if(inLogo) inLogo.value = url; } else { if(lg) lg.classList.add('hidden'); if(inLogo) inLogo.value = ''; } });
+                    onSnapshot(logoRef, (docSnap) => { 
+                        const lg = document.getElementById('header-logo'); 
+                        const inLogo = document.getElementById('in-logo-url'); 
+                        const defaultImg = 'https://placehold.co/120x120/0f172a/06b6d4?text=RENY';
+                        if (docSnap.exists() && docSnap.data().url) { 
+                            const url = docSnap.data().url; 
+                            if(lg) lg.src = window.getDisplayLogoUrl ? window.getDisplayLogoUrl(url) : url; 
+                            if(inLogo) inLogo.value = url; 
+                        } else { 
+                            if(lg) lg.src = defaultImg; 
+                            if(inLogo) inLogo.value = ''; 
+                        } 
+                    });
                 }).catch(err => { window.fallbackOnlineRadar(); });
                 
                 window.fsSaveData = async (obj) => { await setDoc(doc(db, "kinerja_data_v2", obj.id.toString()), obj); };
@@ -648,6 +666,16 @@
     </script>
 
     <script>
+        window.getDisplayLogoUrl = function(url) { 
+            if(!url) return 'https://placehold.co/120x120/0f172a/06b6d4?text=RENY'; 
+            try {
+                if (url.includes('github.com')) {
+                    if (url.includes('/blob/')) return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/'); 
+                    if (url.includes('/raw/')) return url.replace('github.com', 'raw.githubusercontent.com').replace('/raw/', '/'); 
+                }
+            } catch(e) {}
+            return url; 
+        };
         window.data = window.data || []; window.showAnomalyOnly = false; window.showDuplicateOnly = false; window.bln = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         window.isAuthorized = false; window.isSuperAdmin = false; window.isCloudConnected = window.isCloudConnected || false; window.currentStats = null; window.pwdOperator = "Mikayla"; window.pwdSuper = "MasAgungganteng"; window.pendingAction = null;
         setInterval(() => { const clk = document.getElementById('realtime-clock'); if(clk) clk.innerText = new Date().toLocaleTimeString('id-ID', {timeZone: 'Asia/Jakarta'}) + ' WIB'; }, 1000);
@@ -659,7 +687,74 @@
         window.processLogin = function() { const pwd = document.getElementById('in-password').value.trim(); if(pwd === window.pwdSuper) { window.isAuthorized = true; window.isSuperAdmin = true; window.updateSyncIcon(); window.closeLoginModal(); document.getElementById('in-password').value = ''; window.showToast("Akses Super Admin Terbuka!", "emerald"); window.executePendingAction(); } else if(pwd === window.pwdOperator) { if (document.getElementById('login-title').innerText === "Akses Super Admin") { window.showToast("Ditolak! Butuh Password Super Admin.", "red"); return; } window.isAuthorized = true; window.isSuperAdmin = false; window.updateSyncIcon(); window.closeLoginModal(); document.getElementById('in-password').value = ''; window.showToast("Akses Operator Terbuka!", "emerald"); window.executePendingAction(); } else { window.showToast("Password Salah!", "red"); } };
 
         window.triggerProtectedAction = function(actionType, actionTarget = null) { let requiredLevel = (actionType === 'delete') ? 2 : 1; if (requiredLevel === 2 && !window.isSuperAdmin) { window.pendingAction = { type: actionType, target: actionTarget }; window.openLoginModal(2); return; } if (requiredLevel === 1 && !window.isAuthorized && !window.isSuperAdmin) { window.pendingAction = { type: actionType, target: actionTarget }; window.openLoginModal(1); return; } window.pendingAction = { type: actionType, target: actionTarget }; window.executePendingAction(); };
-        window.executePendingAction = function() { if(!window.pendingAction) return; const a = window.pendingAction; window.pendingAction = null; if (a.type === 'import') { document.getElementById('hidden-file-import').click(); } else if (a.type === 'edit') { if(a.target === 'save') { document.getElementById('btn-save-real').click(); } if(a.target === 'savelogo') { const url = document.getElementById('in-logo-url').value; if(!url) return window.showToast("Masukkan link URL Logo!", "amber"); if (window.fsSaveLogo && window.isCloudConnected) { window.fsSaveLogo(url); window.showToast("Logo disimpan ke Cloud!", "emerald"); } else { const lg = document.getElementById('header-logo'); if(lg) { lg.src = url; lg.classList.remove('hidden'); } window.showToast("Logo dipasang lokal!", "emerald"); } } } else if (a.type === 'delete') { if(a.target === 'reset') { if (window.fsResetData && window.isCloudConnected) { window.fsResetData(window.data); window.showToast("Mereset Cloud Database...", "amber"); } else { window.data = []; window.renderDatabase(); window.renderHarian(); window.renderDirektori(); window.showToast("Data Dihapus Permanen!", "red"); } } if(a.target === 'removelogo') { document.getElementById('in-logo-url').value = ''; if (window.fsRemoveLogo && window.isCloudConnected) { window.fsRemoveLogo(); window.showToast("Logo dihapus dari Cloud!", "amber"); } else { const lg = document.getElementById('header-logo'); if(lg) lg.classList.add('hidden'); window.showToast("Logo dihapus!", "amber"); } } if(typeof a.target === 'string' && a.target.length > 10 && a.target !== 'selected') { if (window.fsDeleteData && window.isCloudConnected) { window.fsDeleteData(a.target); window.showToast("Data Dihapus (Cloud)!", "amber"); } else { window.data = window.data.filter(x => x.id !== a.target); window.renderDatabase(); window.renderHarian(); window.renderDirektori(); window.showToast("Data Dihapus (Lokal)!", "red"); } } if(a.target === 'selected') { const checkboxes = document.querySelectorAll('.cb-db-row:checked'); const ids = Array.from(checkboxes).map(cb => cb.value); if(ids.length === 0) return; if (window.fsDeleteData && window.isCloudConnected) { ids.forEach(id => window.fsDeleteData(id)); window.showToast(`${ids.length} Data Dihapus (Cloud)!`, "amber"); window.data = window.data.filter(x => !ids.includes(x.id)); } else { window.data = window.data.filter(x => !ids.includes(x.id)); window.showToast(`${ids.length} Data Dihapus (Lokal)!`, "red"); } window.renderDatabase(); window.renderHarian(); window.renderDirektori(); let btnDel = document.getElementById('btn-delete-selected'); if(btnDel) { btnDel.classList.add('hidden'); btnDel.classList.remove('flex'); } let cbAll = document.getElementById('cb-db-all'); if(cbAll) cbAll.checked = false; } } };
+        window.executePendingAction = function() { 
+            if(!window.pendingAction) return; 
+            const a = window.pendingAction; 
+            window.pendingAction = null; 
+            
+            if (a.type === 'import') { 
+                document.getElementById('hidden-file-import').click(); 
+            } else if (a.type === 'edit') { 
+                if(a.target === 'save') { 
+                    document.getElementById('btn-save-real').click(); 
+                } 
+                if(a.target === 'savelogo') { 
+                    let url = document.getElementById('in-logo-url').value.trim(); 
+                    if(!url) return window.showToast("Masukkan link URL Logo!", "amber"); 
+
+                    if (window.fsSaveLogo && window.isCloudConnected) { 
+                        window.fsSaveLogo(url); window.showToast("Logo disimpan ke Cloud!", "emerald"); 
+                    } else { 
+                        const lg = document.getElementById('header-logo'); 
+                        if(lg) lg.src = window.getDisplayLogoUrl ? window.getDisplayLogoUrl(url) : url; 
+                        localStorage.setItem('local_header_logo', url);
+                        window.showToast("Logo dipasang lokal!", "emerald"); 
+                    } 
+                } 
+            } else if (a.type === 'delete') { 
+                if(a.target === 'reset') { 
+                    if (window.fsResetData && window.isCloudConnected) { 
+                        window.fsResetData(window.data); window.showToast("Mereset Cloud Database...", "amber"); 
+                    } else { 
+                        window.data = []; window.renderDatabase(); window.renderHarian(); window.renderDirektori(); window.showToast("Data Dihapus Permanen!", "red"); 
+                    } 
+                } 
+                if(a.target === 'removelogo') { 
+                    document.getElementById('in-logo-url').value = ''; 
+                    const defaultImg = 'https://placehold.co/120x120/0f172a/06b6d4?text=RENY';
+                    if (window.fsRemoveLogo && window.isCloudConnected) { 
+                        window.fsRemoveLogo(); window.showToast("Logo dihapus dari Cloud!", "amber"); 
+                    } else { 
+                        const lg = document.getElementById('header-logo'); 
+                        if(lg) lg.src = defaultImg;
+                        localStorage.removeItem('local_header_logo');
+                        window.showToast("Logo dihapus!", "amber"); 
+                    } 
+                } 
+                if(typeof a.target === 'string' && a.target.length > 10 && a.target !== 'selected') { 
+                    if (window.fsDeleteData && window.isCloudConnected) { 
+                        window.fsDeleteData(a.target); window.showToast("Data Dihapus (Cloud)!", "amber"); 
+                    } else { 
+                        window.data = window.data.filter(x => x.id !== a.target); window.renderDatabase(); window.renderHarian(); window.renderDirektori(); window.showToast("Data Dihapus (Lokal)!", "red"); 
+                    } 
+                } 
+                if(a.target === 'selected') { 
+                    const checkboxes = document.querySelectorAll('.cb-db-row:checked'); 
+                    const ids = Array.from(checkboxes).map(cb => cb.value); 
+                    if(ids.length === 0) return; 
+                    if (window.fsDeleteData && window.isCloudConnected) { 
+                        ids.forEach(id => window.fsDeleteData(id)); window.showToast(`${ids.length} Data Dihapus (Cloud)!`, "amber"); 
+                        window.data = window.data.filter(x => !ids.includes(x.id)); 
+                    } else { 
+                        window.data = window.data.filter(x => !ids.includes(x.id)); window.showToast(`${ids.length} Data Dihapus (Lokal)!`, "red"); 
+                    } 
+                    window.renderDatabase(); window.renderHarian(); window.renderDirektori(); 
+                    let btnDel = document.getElementById('btn-delete-selected'); 
+                    if(btnDel) { btnDel.classList.add('hidden'); btnDel.classList.remove('flex'); } 
+                    let cbAll = document.getElementById('cb-db-all'); if(cbAll) cbAll.checked = false; 
+                } 
+            } 
+        };
         window.updateSyncIcon = function() { const btn = document.getElementById('btn-login-sync'); const icon = document.getElementById('icon-login-sync'); if(!btn || !icon) return; if (window.isAuthorized || window.isSuperAdmin) { icon.className = "fas fa-unlock"; if (window.isCloudConnected) { btn.className = "w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm transition-all shadow-[0_0_15px_rgba(16,185,129,0.8)] cursor-pointer hover:scale-110"; btn.title = "Akses Terbuka & Cloud Aktif (Klik utk Logout)"; } else { btn.className = "w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center text-sm transition-all shadow-[0_0_15px_rgba(245,158,11,0.8)] cursor-pointer hover:scale-110"; btn.title = "Akses Terbuka & Mode Lokal (Klik utk Logout)"; } } else { icon.className = "fas fa-lock"; if (window.isCloudConnected) { btn.className = "w-8 h-8 rounded-full bg-emerald-900/30 border border-emerald-500/50 text-emerald-400 flex items-center justify-center text-xs transition-all cursor-pointer hover:scale-110"; btn.title = "Terkunci & Cloud Aktif. Klik untuk Login"; } else { btn.className = "w-8 h-8 rounded-full bg-red-500/20 border border-red-500 text-red-500 flex items-center justify-center text-xs transition-all shadow-[0_0_10px_rgba(239,68,68,0.5)] cursor-pointer hover:scale-110"; btn.title = "Terkunci & Mode Lokal. Klik untuk Login"; } } };
         window.showToast = function(msg, type='emerald') { const container = document.getElementById('toast-container'); if(!container) return; const toast = document.createElement('div'); toast.className = `toast toast-${type} show`; toast.innerHTML = `<i class="fas fa-${type==='emerald'?'check-circle':(type==='amber'?'exclamation-triangle':(type==='cyan'?'info-circle':'times-circle'))}"></i> ${msg}`; container.appendChild(toast); setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000); };
         
@@ -711,28 +806,24 @@
                 let d = aggHarian[k];
                 let out = k.split("___")[0]; let dept = k.split("___")[1];
                 
-                // Kalkulasi Target Berjalan
                 let mO = 0, mP = 0;
                 if(masterMap[k]) {
                     let p = rangeHari / jmlHariBulanIni;
                     mO = masterMap[k].tO * p; mP = masterMap[k].tP * p;
                 } else { mO = d.baseTO; mP = d.baseTP; }
 
-                // 1. Alert Margin Bocor (> 1.5%)
                 let marginTgt = mO > 0 ? (mP / mO) * 100 : 0;
                 let marginAkt = d.aktO > 0 ? (d.aktP / d.aktO) * 100 : 0;
                 if(marginTgt > 0 && (marginTgt - marginAkt) >= 1.5 && d.aktO > 0) {
                     insights.push(`<div class="bg-rose-900/40 border-l-4 border-rose-500 p-3 rounded-r-lg shadow-sm flex items-start gap-3 hover:bg-rose-900/60 transition-colors"><div class="bg-rose-500/20 p-2 rounded-full text-rose-400"><i class="fas fa-exclamation-triangle"></i></div><div><h4 class="text-rose-400 text-xs font-black">Bocor Margin: ${out} - ${dept}</h4><p class="text-[10px] text-gray-300 mt-0.5">Margin aktual <b>${marginAkt.toFixed(2)}%</b> di bawah target berjalan (${marginTgt.toFixed(2)}%). Cek struktur HPP/Diskon!</p></div></div>`);
                 }
 
-                // 2. Alert Overstock (DSI > 60 Hari)
                 let hpp = d.aktO - d.aktP;
                 let dsi = hpp > 0 ? (d.stock / hpp) * rangeHari : 0;
                 if(dsi > 60 && d.stock > 0) {
                     insights.push(`<div class="bg-amber-900/40 border-l-4 border-amber-500 p-3 rounded-r-lg shadow-sm flex items-start gap-3 hover:bg-amber-900/60 transition-colors"><div class="bg-amber-500/20 p-2 rounded-full text-amber-400"><i class="fas fa-boxes"></i></div><div><h4 class="text-amber-400 text-xs font-black">Overstock: ${out} - ${dept}</h4><p class="text-[10px] text-gray-300 mt-0.5">DSI menyentuh <b>${dsi.toFixed(1)} Hari</b>. Pertimbangkan menunda belanja atau lakukan cuci gudang.</p></div></div>`);
                 }
 
-                // 3. Alert Performa Top (Achievement > 105%)
                 let achO = mO > 0 ? (d.aktO / mO) * 100 : 0;
                 if(achO >= 105 && d.aktO > 0) {
                     insights.push(`<div class="bg-emerald-900/40 border-l-4 border-emerald-500 p-3 rounded-r-lg shadow-sm flex items-start gap-3 hover:bg-emerald-900/60 transition-colors"><div class="bg-emerald-500/20 p-2 rounded-full text-emerald-400"><i class="fas fa-fire"></i></div><div><h4 class="text-emerald-400 text-xs font-black">Performa Top: ${out} - ${dept}</h4><p class="text-[10px] text-gray-300 mt-0.5">Penjualan <b>+${(achO - 100).toFixed(1)}%</b> dari target berjalan. Pertahankan display & traffic saat ini!</p></div></div>`);
@@ -740,7 +831,6 @@
             });
 
             if(insights.length > 0) {
-                // Memprioritaskan Error (Merah -> Kuning -> Hijau)
                 insights.sort((a,b) => {
                     if(a.includes('rose') && !b.includes('rose')) return -1;
                     if(b.includes('rose') && !a.includes('rose')) return 1;
@@ -748,7 +838,6 @@
                     if(b.includes('amber') && !a.includes('amber')) return 1;
                     return 0;
                 });
-                // Munculkan maks 3 kartu (Prioritas paling gawat)
                 let htmlStr = `<div class="glass p-5 rounded-2xl border-t-4 border-cyan-500 shadow-lg"><h3 class="text-xs text-cyan-400 font-black uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fas fa-robot animate-pulse"></i> Smart Auto-Insights AI</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${insights.slice(0, 3).join('')}</div></div>`;
                 container.innerHTML = htmlStr;
             } else {
@@ -757,13 +846,14 @@
         };
 
         window.renderAnalisisLanjutan = function(containerId, tAwal, limitAkhir, aktO, aktP, aktB, totStock, bF, tF, oF, divF, deptF, tgtB=0) {
+            let isAggregateMode = (oF === "");
             let bMoM = bF === 1 ? 12 : bF - 1; let tMoM = bF === 1 ? tF - 1 : tF;
             let dataMoM = window.data.filter(d => (oF===""||window.isOutletMatch(d.outlet,oF)) && (divF===""||window.getDivisi(d.dept)===divF) && (deptF===""||(deptF === 'LAINNYA_UNCATEGORIZED' ? window.isUnknownDept(d.dept) : window.normalizeName(d.dept, 'dept')===deptF)) && d.bulan===bMoM && d.tahun===tMoM && d.tanggal >= tAwal && d.tanggal <= limitAkhir);
-            let momO = 0, momP = 0; dataMoM.forEach(d => { let isC = d.outlet==='Corporate'; momO += isC?0:(d.omset||0); momP += isC?0:(d.profit||0); });
+            let momO = 0, momP = 0; dataMoM.forEach(d => { let isC = d.outlet==='Corporate'; let ignore = isC && isAggregateMode; momO += ignore?0:(d.omset||0); momP += ignore?0:(d.profit||0); });
 
             let bYoY = bF; let tYoY = tF - 1;
             let dataYoY = window.data.filter(d => (oF===""||window.isOutletMatch(d.outlet,oF)) && (divF===""||window.getDivisi(d.dept)===divF) && (deptF===""||(deptF === 'LAINNYA_UNCATEGORIZED' ? window.isUnknownDept(d.dept) : window.normalizeName(d.dept, 'dept')===deptF)) && d.bulan===bYoY && d.tahun===tYoY && d.tanggal >= tAwal && d.tanggal <= limitAkhir);
-            let yoyO = 0, yoyP = 0; dataYoY.forEach(d => { let isC = d.outlet==='Corporate'; yoyO += isC?0:(d.omset||0); yoyP += isC?0:(d.profit||0); });
+            let yoyO = 0, yoyP = 0; dataYoY.forEach(d => { let isC = d.outlet==='Corporate'; let ignore = isC && isAggregateMode; yoyO += ignore?0:(d.omset||0); yoyP += ignore?0:(d.profit||0); });
 
             let momPctO = momO > 0 ? (((aktO - momO) / momO) * 100).toFixed(2) : (aktO > 0 ? '100.00' : '0.00'); let momPctP = momP > 0 ? (((aktP - momP) / momP) * 100).toFixed(2) : (aktP > 0 ? '100.00' : '0.00');
             let yoyPctO = yoyO > 0 ? (((aktO - yoyO) / yoyO) * 100).toFixed(2) : (aktO > 0 ? '100.00' : '0.00'); let yoyPctP = yoyP > 0 ? (((aktP - yoyP) / yoyP) * 100).toFixed(2) : (aktP > 0 ? '100.00' : '0.00');
@@ -835,6 +925,8 @@
             let dataMaster = activeData.filter(d => d.tanggal === 0); 
             let dataHarian = activeData.filter(d => d.tanggal >= tAwal && d.tanggal <= tAkhir).sort((a,b) => a.tanggal - b.tanggal);
 
+            let isAggregateMode = (oF === "");
+
             let masterMap = {};
             dataMaster.forEach(d => { 
                 let k = d.outlet + "___" + d.dept; 
@@ -854,26 +946,37 @@
             dataHarian.forEach(d => {
                 if (!aTgl.includes(d.tanggal)) aTgl.push(d.tanggal); 
                 let k = d.outlet + "___" + d.dept; 
+                let isCorp = d.outlet === 'Corporate';
+                let ignore = isCorp && isAggregateMode;
+
                 if (!aggHarian[k]) aggHarian[k] = { dept: d.dept, baseTO:0, baseTP:0, baseTB:0, aktO:0, aktP:0, aktB:0, stock:0 };
                 
-                aggHarian[k].baseTO += (d.target||0); aggHarian[k].baseTP += (d.tProfit||0); aggHarian[k].baseTB = aggHarian[k].baseTO - aggHarian[k].baseTP;
+                if (!ignore) {
+                    aggHarian[k].baseTO += (d.target||0); aggHarian[k].baseTP += (d.tProfit||0); aggHarian[k].baseTB = aggHarian[k].baseTO - aggHarian[k].baseTP;
+                }
                 
-                let isCorp = d.outlet === 'Corporate'; let aO = isCorp ? 0 : (d.omset||0); let aP = isCorp ? 0 : (d.profit||0); let aB = isCorp ? 0 : (d.pembelian||0);
+                let aO = ignore ? 0 : (d.omset||0); let aP = ignore ? 0 : (d.profit||0); let aB = ignore ? 0 : (d.pembelian||0);
 
                 aggHarian[k].aktO += aO; aggHarian[k].aktP += aP; aggHarian[k].aktB += aB; 
-                totAktOmset += aO; totAktProfit += aP; totAktBeli += aB; 
                 
-                totInputBerjalanOmset += (d.target||0); totInputBerjalanProfit += (d.tProfit||0); 
-                if(!stockTracker[k]) stockTracker[k] = { tgl: -1, val: 0 }; 
-                if (d.stock !== 0 && d.tanggal >= stockTracker[k].tgl) { stockTracker[k].tgl = d.tanggal; stockTracker[k].val = d.stock; }
+                if (!ignore) {
+                    totAktOmset += aO; totAktProfit += aP; totAktBeli += aB; 
+                    totInputBerjalanOmset += (d.target||0); totInputBerjalanProfit += (d.tProfit||0); 
+                    if(!stockTracker[k]) stockTracker[k] = { tgl: -1, val: 0 }; 
+                    if (d.stock !== 0 && d.tanggal >= stockTracker[k].tgl) { stockTracker[k].tgl = d.tanggal; stockTracker[k].val = d.stock; }
+                }
             });
             totInputBerjalanBeli = totInputBerjalanOmset - totInputBerjalanProfit;
 
             let tMasterOmset=0, tMasterProfit=0, tMasterBeli=0;
             Object.keys(masterMap).forEach(k => {
-                let m = masterMap[k];
-                if (m.tP === 0 && aggHarian[k] && aggHarian[k].baseTO > 0) { let r = aggHarian[k].baseTP / aggHarian[k].baseTO; m.tP = m.tO * r; }
-                m.tPem = m.tO - m.tP; tMasterOmset += m.tO; tMasterProfit += m.tP; tMasterBeli += m.tPem;
+                let isCorp = k.startsWith('Corporate___');
+                let ignore = isCorp && isAggregateMode;
+                if (!ignore) {
+                    let m = masterMap[k];
+                    if (m.tP === 0 && aggHarian[k] && aggHarian[k].baseTO > 0) { let r = aggHarian[k].baseTP / aggHarian[k].baseTO; m.tP = m.tO * r; }
+                    m.tPem = m.tO - m.tP; tMasterOmset += m.tO; tMasterProfit += m.tP; tMasterBeli += m.tPem;
+                }
             });
 
             let totStock = 0; Object.keys(stockTracker).forEach(k => { if (aggHarian[k]) { aggHarian[k].stock += stockTracker[k].val; } totStock += stockTracker[k].val; });
@@ -902,7 +1005,6 @@
 
             window.currentStats = { omsetAkt: totAktOmset, omsetTgt: totBerjalanOmset, profitAkt: totAktProfit, profitTgt: totBerjalanProfit, marginAkt: marginAktVal, marginTgt: marginTgtVal, beliAkt: totAktBeli, beliTgt: totBerjalanBeli, dsi: (totAktOmset - totAktProfit) > 0 ? (totStock / (totAktOmset - totAktProfit)) * (rangeHari>0?rangeHari:1) : 0 };
 
-            // Panggil Smart Insights sebelum fitur lainnya
             window.renderSmartInsights(aggHarian, masterMap, stockTracker, rangeHari, jmlHariBulanIni);
             window.renderAnalisisLanjutan('har-analisis-lanjutan', tAwal, limitAkhir, totAktOmset, totAktProfit, totAktBeli, totStock, bF, tF, oF, divF, deptF, totBerjalanBeli);
             window.renderKontribusiOutlet('har-kontribusi-outlet', dataHarian, totAktOmset);
@@ -911,7 +1013,11 @@
             if(dC) {
                 let allKeys = new Set([...Object.keys(masterMap), ...Object.keys(aggHarian)]); let cardGroups = {};
                 Array.from(allKeys).forEach(k => {
-                    let rawOutlet = k.split("___")[0]; let rawDept = k.split("___")[1]; let gOutlet = oF === "" ? "Corporate" : rawOutlet;
+                    let rawOutlet = k.split("___")[0]; let rawDept = k.split("___")[1]; 
+                    let isCorp = rawOutlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
+                    if (ignore) return; 
+
+                    let gOutlet = oF === "" ? "Corporate" : rawOutlet;
                     let addToGroup = (label, isDivisi, catName) => {
                         if(!cardGroups[label]) cardGroups[label] = { cat: catName, outlet: gOutlet, isDiv: isDivisi, tO:0, tP:0, tPem:0, aktO:0, aktP:0, aktB:0, baseTO:0, baseTP:0, baseTB:0, stock:0, hasMaster:false };
                         if(masterMap[k]) { cardGroups[label].tO += masterMap[k].tO; cardGroups[label].tP += masterMap[k].tP; cardGroups[label].tPem += masterMap[k].tPem; cardGroups[label].hasMaster = true; }
@@ -947,8 +1053,12 @@
                 else {
                     if(tbEmpty) tbEmpty.style.display = 'none'; let groupedByDate = {};
                     dataHarian.forEach(d => {
+                        let isCorp = d.outlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
                         if (!groupedByDate[d.tanggal]) { groupedByDate[d.tanggal] = { tanggal: d.tanggal, target: 0, omset: 0, tProfit: 0, profit: 0, tPembelian: 0, pembelian: 0, stock: 0, details: [] }; }
-                        groupedByDate[d.tanggal].target += (d.target || 0); groupedByDate[d.tanggal].omset += (d.omset || 0); groupedByDate[d.tanggal].tProfit += (d.tProfit || 0); groupedByDate[d.tanggal].profit += (d.profit || 0); groupedByDate[d.tanggal].pembelian += (d.pembelian || 0); groupedByDate[d.tanggal].stock += (d.stock || 0); groupedByDate[d.tanggal].details.push(d);
+                        if (!ignore) {
+                            groupedByDate[d.tanggal].target += (d.target || 0); groupedByDate[d.tanggal].omset += (d.omset || 0); groupedByDate[d.tanggal].tProfit += (d.tProfit || 0); groupedByDate[d.tanggal].profit += (d.profit || 0); groupedByDate[d.tanggal].pembelian += (d.pembelian || 0); groupedByDate[d.tanggal].stock += (d.stock || 0); 
+                        }
+                        groupedByDate[d.tanggal].details.push(d);
                     });
 
                     let htmlDet = '';
@@ -967,12 +1077,14 @@
 
         window.renderAnalisisLanjutanDir = function(containerId, aktO, aktP, aktB, totStock, activeMonths, tF, oF, divF, deptF, totalDaysActive, tgtB=0) {
             let globalLastTglPerBulan = {};
+            let isAggregateMode = (oF === "");
             window.data.forEach(d => { if (d.tahun === tF && d.tanggal >= 1 && d.tanggal <= 31) { if (!globalLastTglPerBulan[d.bulan]) globalLastTglPerBulan[d.bulan] = 0; if (d.tanggal > globalLastTglPerBulan[d.bulan]) globalLastTglPerBulan[d.bulan] = d.tanggal; } });
             let yoyO = 0, yoyP = 0; 
             window.data.forEach(d => { 
                 if((oF===""||window.isOutletMatch(d.outlet,oF)) && (divF===""||window.getDivisi(d.dept)===divF) && (deptF===""||(deptF === 'LAINNYA_UNCATEGORIZED' ? window.isUnknownDept(d.dept) : window.normalizeName(d.dept, 'dept')===deptF)) && d.tahun===(tF-1) && activeMonths.includes(d.bulan)) { 
-                    let isC = d.outlet==='Corporate'; let maxTgl = globalLastTglPerBulan[d.bulan] || 31;
-                    if (d.tanggal >= 1 && d.tanggal <= maxTgl) { yoyO += isC ? 0 : (d.omset||0); yoyP += isC ? 0 : (d.profit||0); }
+                    let isC = d.outlet==='Corporate'; let ignore = isC && isAggregateMode;
+                    let maxTgl = globalLastTglPerBulan[d.bulan] || 31;
+                    if (d.tanggal >= 1 && d.tanggal <= maxTgl) { yoyO += ignore ? 0 : (d.omset||0); yoyP += ignore ? 0 : (d.profit||0); }
                 } 
             });
             let prevActiveMonths = [];
@@ -982,8 +1094,9 @@
             window.data.forEach(d => { 
                 let targetTahun = (activeMonths.length === 1 && activeMonths[0] === 1) ? tF - 1 : tF;
                 if((oF===""||window.isOutletMatch(d.outlet,oF)) && (divF===""||window.getDivisi(d.dept)===divF) && (deptF===""||(deptF === 'LAINNYA_UNCATEGORIZED' ? window.isUnknownDept(d.dept) : window.normalizeName(d.dept, 'dept')===deptF)) && d.tahun===targetTahun && prevActiveMonths.includes(d.bulan)) { 
-                    let isC = d.outlet==='Corporate'; let maxTgl = 31; if (activeMonths.length === 1 && d.bulan === prevActiveMonths[0]) { maxTgl = globalLastTglPerBulan[activeMonths[0]] || 31; }
-                    if (d.tanggal >= 1 && d.tanggal <= maxTgl) { momO += isC ? 0 : (d.omset||0); momP += isC ? 0 : (d.profit||0); }
+                    let isC = d.outlet==='Corporate'; let ignore = isC && isAggregateMode;
+                    let maxTgl = 31; if (activeMonths.length === 1 && d.bulan === prevActiveMonths[0]) { maxTgl = globalLastTglPerBulan[activeMonths[0]] || 31; }
+                    if (d.tanggal >= 1 && d.tanggal <= maxTgl) { momO += ignore ? 0 : (d.omset||0); momP += ignore ? 0 : (d.profit||0); }
                 } 
             });
             
@@ -1046,6 +1159,7 @@
             if(totalDaysActive === 0) totalDaysActive = 1;
 
             let baseData = window.data.filter(d => (oF === "" || window.isOutletMatch(d.outlet, oF)) && (divF === "" || window.getDivisi(d.dept) === divF) && (deptF === "" || (deptF === 'LAINNYA_UNCATEGORIZED' ? window.isUnknownDept(d.dept) : window.normalizeName(d.dept, 'dept') === deptF)) && d.tahun === tF);
+            let isAggregateMode = (oF === "");
 
             let lastTglPerBulan = {}; let adaMasterPerBulan = {}; let globalStockTracker = {};
             
@@ -1056,8 +1170,11 @@
 
             baseData.forEach(d => {
                 if (activeMonths.includes(d.bulan)) {
-                    let tgl = d.tanggal >= 0 ? d.tanggal : 0; let score = d.bulan * 100 + tgl; let k = d.outlet + "___" + d.dept;
-                    if (!globalStockTracker[k] || score >= globalStockTracker[k].score) { if (d.stock !== 0 || !globalStockTracker[k]) { globalStockTracker[k] = { score: score, val: d.stock || 0 }; } }
+                    let isCorp = d.outlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
+                    if (!ignore) {
+                        let tgl = d.tanggal >= 0 ? d.tanggal : 0; let score = d.bulan * 100 + tgl; let k = d.outlet + "___" + d.dept;
+                        if (!globalStockTracker[k] || score >= globalStockTracker[k].score) { if (d.stock !== 0 || !globalStockTracker[k]) { globalStockTracker[k] = { score: score, val: d.stock || 0 }; } }
+                    }
                 }
             });
             let totStockGlobal = 0; Object.values(globalStockTracker).forEach(s => totStockGlobal += s.val);
@@ -1065,20 +1182,28 @@
             let monthDeptAgg = {};
             baseData.forEach(d => {
                 let k = d.bulan + "___" + d.outlet + "___" + d.dept;
+                let isCorp = d.outlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
                 if (!monthDeptAgg[k]) { monthDeptAgg[k] = { outlet: d.outlet, dept: d.dept, bulan: d.bulan, hasMaster: false, m_tO: 0, m_tP: 0, m_tB: 0, d_tO: 0, d_tP: 0, d_tB: 0, aO: 0, aP: 0, aB: 0 }; }
                 
-                let isCorp = d.outlet === 'Corporate'; monthDeptAgg[k].aO += isCorp ? 0 : (d.omset||0); monthDeptAgg[k].aP += isCorp ? 0 : (d.profit||0); monthDeptAgg[k].aB += isCorp ? 0 : (d.pembelian||0); 
+                monthDeptAgg[k].aO += ignore ? 0 : (d.omset||0); monthDeptAgg[k].aP += ignore ? 0 : (d.profit||0); monthDeptAgg[k].aB += ignore ? 0 : (d.pembelian||0); 
 
                 if (d.tanggal === 0) {
-                    monthDeptAgg[k].hasMaster = true; monthDeptAgg[k].m_tO = Math.max(monthDeptAgg[k].m_tO, (d.target||0)); monthDeptAgg[k].m_tP = Math.max(monthDeptAgg[k].m_tP, (d.tProfit||0)); monthDeptAgg[k].m_tB = monthDeptAgg[k].m_tO - monthDeptAgg[k].m_tP; 
+                    if (!ignore) {
+                        monthDeptAgg[k].hasMaster = true; monthDeptAgg[k].m_tO = Math.max(monthDeptAgg[k].m_tO, (d.target||0)); monthDeptAgg[k].m_tP = Math.max(monthDeptAgg[k].m_tP, (d.tProfit||0)); monthDeptAgg[k].m_tB = monthDeptAgg[k].m_tO - monthDeptAgg[k].m_tP; 
+                    }
                 } else {
-                    monthDeptAgg[k].d_tO += (d.target||0); monthDeptAgg[k].d_tP += (d.tProfit||0); monthDeptAgg[k].d_tB = monthDeptAgg[k].d_tO - monthDeptAgg[k].d_tP; 
+                    if (!ignore) {
+                        monthDeptAgg[k].d_tO += (d.target||0); monthDeptAgg[k].d_tP += (d.tProfit||0); monthDeptAgg[k].d_tB = monthDeptAgg[k].d_tO - monthDeptAgg[k].d_tP; 
+                    }
                 }
             });
 
             let totYtdTO = 0, totYtdTP = 0, totYtdTB = 0, totYtdAO = 0, totYtdAP = 0, totYtdAB = 0; let pureMasterOmset = 0, pureMasterProfit = 0; let outYtdOmset = {}; let cardGroups = {};
 
             Object.values(monthDeptAgg).filter(g => activeMonths.includes(g.bulan)).forEach(g => {
+                let isCorp = g.outlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
+                if (ignore) return;
+
                 let gOutlet = oF === "" ? "Corporate" : g.outlet; let divName = window.getDivisi(g.dept);
                 let m = g.bulan; let lastTglBln = lastTglPerBulan[m] || 0; let dim = new Date(tF, m, 0).getDate(); let isPassed = (tF < currYear) || (tF === currYear && m < currMonth); let isCurrent = (tF === currYear && m === currMonth);
                 
@@ -1156,13 +1281,19 @@
                     
                     let monthlyStockTracker = {};
                     tableData.forEach(d => {
-                        let m = d.bulan; let k = d.outlet + "___" + d.dept; let tglVal = d.tanggal >= 0 ? d.tanggal : 0;
-                        if(!monthlyStockTracker[m]) monthlyStockTracker[m] = {};
-                        if(!monthlyStockTracker[m][k] || tglVal > monthlyStockTracker[m][k].tgl) { monthlyStockTracker[m][k] = {tgl: tglVal, val: d.stock || 0}; }
-                        else if (tglVal === monthlyStockTracker[m][k].tgl && d.stock !== 0) { monthlyStockTracker[m][k].val = d.stock; }
+                        let isCorp = d.outlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
+                        if (!ignore) {
+                            let m = d.bulan; let k = d.outlet + "___" + d.dept; let tglVal = d.tanggal >= 0 ? d.tanggal : 0;
+                            if(!monthlyStockTracker[m]) monthlyStockTracker[m] = {};
+                            if(!monthlyStockTracker[m][k] || tglVal > monthlyStockTracker[m][k].tgl) { monthlyStockTracker[m][k] = {tgl: tglVal, val: d.stock || 0}; }
+                            else if (tglVal === monthlyStockTracker[m][k].tgl && d.stock !== 0) { monthlyStockTracker[m][k].val = d.stock; }
+                        }
                     });
 
                     Object.values(monthDeptAgg).filter(g => filterBulanArr.includes(g.bulan)).forEach(g => {
+                        let isCorp = g.outlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
+                        if (ignore) return;
+                        
                         let m = g.bulan; let k = g.outlet + "___" + g.dept; if(!dirMonthlyData[m]) return; 
                         
                         let lastTglBln = lastTglPerBulan[m] || 0; let dim = new Date(tF, m, 0).getDate(); let isPassed = (tF < currYear) || (tF === currYear && m < currMonth); let isCurrent = (tF === currYear && m === currMonth);
@@ -1328,7 +1459,8 @@
             const jmlHariBulanIni = new Date(tF, bF, 0).getDate();
             
             let baseData = window.data.filter(d => (oF === "" || window.isOutletMatch(d.outlet, oF)) && (divF === "" || window.getDivisi(d.dept) === divF) && (deptF === "" || (deptF === 'LAINNYA_UNCATEGORIZED' ? window.isUnknownDept(d.dept) : window.normalizeName(d.dept, 'dept') === deptF)) && arrBulan.includes(d.bulan) && d.tahun === tF);
-            
+            let isAggregateMode = (oF === "");
+
             let aTgl = []; 
             baseData.forEach(d => { if(d.tanggal >= 1 && d.tanggal <= 31 && !aTgl.includes(d.tanggal)) aTgl.push(d.tanggal); });
             let rHari = aTgl.length > 0 ? aTgl.length : 1;
@@ -1338,6 +1470,9 @@
 
             baseData.forEach(d => {
                 let isCorp = d.outlet === 'Corporate';
+                let ignore = isCorp && isAggregateMode;
+                if (ignore) return;
+
                 let outletName = grpFilter === 'corporate' ? 'CORPORATE (Nasional)' : d.outlet;
                 let deptName = window.normalizeName(d.dept, 'dept');
                 let deptKey = outletName + "___" + deptName;
@@ -1351,9 +1486,9 @@
                     deptAgg[deptKey].tgtO = Math.max(deptAgg[deptKey].tgtO, (d.target||0));
                     deptAgg[deptKey].tgtP = Math.max(deptAgg[deptKey].tgtP, (d.tProfit||0));
                 } else if(d.tanggal >= 1 && d.tanggal <= 31) {
-                    let aO = isCorp ? 0 : (d.omset||0);
-                    let aP = isCorp ? 0 : (d.profit||0);
-                    let aB = isCorp ? 0 : (d.pembelian||0);
+                    let aO = (d.omset||0);
+                    let aP = (d.profit||0);
+                    let aB = (d.pembelian||0);
                     
                     globalAktO += aO; globalAktP += aP; globalAktB += aB;
                     
@@ -1364,7 +1499,7 @@
                     deptAgg[deptKey].runTO += (d.target||0);
                     deptAgg[deptKey].runTP += (d.tProfit||0);
 
-                    if(d.stock !== 0 && !isCorp) {
+                    if(d.stock !== 0) {
                         let rKey = d.outlet + "___" + deptName;
                         if(!realStockTracker[rKey] || d.tanggal >= realStockTracker[rKey].tgl) {
                             realStockTracker[rKey] = { tgl: d.tanggal, val: d.stock, destKey: deptKey };
@@ -1390,7 +1525,7 @@
                 let pP = d.tgtP > 0 ? (d.aktP / d.tgtP) * 100 : (d.aktP > 0 ? 100 : 0); 
                 let pB = d.tgtB > 0 ? (d.aktB / d.tgtB) * 100 : (d.aktB > 0 ? 100 : 0);
                 
-                let hpp = d.aktO - d.aktP; let dsi = hpp > 0 ? (d.stock / hpp) * rHari : 0;
+                let hpp =d.aktO - d.aktP; let dsi = hpp > 0 ? (d.stock / hpp) * rHari : 0;
                 
                 let rrO = rHari > 0 ? d.aktO / rHari : 0; 
                 let rrP = rHari > 0 ? d.aktP / rHari : 0; 
@@ -1798,8 +1933,14 @@
             if(!tbody || !thead || !tfoot) return;
             thead.innerHTML = `<tr class="bg-gray-900/98 backdrop-blur-xl text-gray-300 text-[10px] uppercase font-black tracking-widest shadow-[0_10px_20px_-5px_rgba(0,0,0,0.8)] border-b border-gray-600"><th class="py-4 px-4 w-12 text-center"><input type="checkbox" id="cb-db-all" class="w-3 h-3 rounded bg-gray-900 border-gray-600 cursor-pointer" onclick="window.toggleAllDbCb(this)"></th><th class="py-4 px-4 text-center">Tgl/Bln/Thn</th><th class="py-4 px-4">Outlet</th><th class="py-4 px-4">Departemen</th><th class="py-4 px-4 text-right">T. Omset</th><th class="py-4 px-4 text-right">T. Profit</th><th class="py-4 px-4 text-right text-cyan-500">A. Omset</th><th class="py-4 px-4 text-right text-emerald-500">A. Profit</th><th class="py-4 px-4 text-right text-amber-500">A. Pembelian</th><th class="py-4 px-4 text-right text-fuchsia-500">Stok Akhir</th><th class="py-4 px-4 text-center">Aksi</th></tr>`;
             if (data.length === 0) { tbody.innerHTML = `<tr><td colspan="11" class="text-center py-12 text-gray-500 font-bold glass bg-transparent border-none"><i class="fas fa-database text-5xl mb-4 opacity-50"></i><br>Database Kosong / Tidak Ada Data Ditemukan.</td></tr>`; tfoot.innerHTML = ''; return; }
+            
+            const fO = document.getElementById('dbFilterOutlet')?.value || "";
+            let isAggregateMode = (fO === "");
             let html = ''; let totT_O=0, totT_P=0, totA_O=0, totA_P=0, totA_B=0, maxStok=0; let sMap = {};
             data.forEach((d, i) => {
+                let isCorp = d.outlet === 'Corporate';
+                let ignoreActual = isCorp && isAggregateMode;
+
                 let errTag = '';
                 if (window.showDuplicateOnly || window.showAnomalyOnly) {
                     if (window.showDuplicateOnly && !d.isDuplicate) return;
@@ -1811,13 +1952,16 @@
                 let tglLbl = d.tanggal === 0 ? `<span class="bg-amber-900/80 text-amber-400 px-2 py-1 rounded border border-amber-500/50 shadow-sm"><i class="fas fa-crown"></i> Master Bulanan</span>` : (d.tanggal === -1 ? `<span class="bg-rose-900/80 text-rose-400 px-2 py-1 rounded border border-rose-500/50 shadow-sm">Invalid Date</span>` : `<span class="text-gray-300 font-black">${d.tanggal.toString().padStart(2, '0')}/${d.bulan.toString().padStart(2, '0')}/${d.tahun}</span>`);
                 let isMaster = d.tanggal === 0; let bgRow = i % 2 === 0 ? 'bg-gray-900/40' : 'bg-gray-800/40'; if(isMaster) bgRow = 'bg-amber-900/10 border-l-2 border-amber-500';
                 
-                totT_O += (d.target||0); totT_P += (d.tProfit||0);
-                let a_O = isMaster ? 0 : (d.omset||0); let a_P = isMaster ? 0 : (d.profit||0); let a_B = isMaster ? 0 : (d.pembelian||0); let stok = isMaster ? 0 : (d.stock||0);
+                totT_O += ignoreActual ? 0 : (d.target||0); 
+                totT_P += ignoreActual ? 0 : (d.tProfit||0);
+                
+                let a_O = (isMaster || ignoreActual) ? 0 : (d.omset||0); let a_P = (isMaster || ignoreActual) ? 0 : (d.profit||0); let a_B = (isMaster || ignoreActual) ? 0 : (d.pembelian||0); let stok = (isMaster || ignoreActual) ? 0 : (d.stock||0);
                 totA_O += a_O; totA_P += a_P; totA_B += a_B;
                 
-                let k = d.outlet+"___"+d.dept; if(!isMaster) { if(!sMap[k] || d.tanggal >= sMap[k].t) { sMap[k] = { t: d.tanggal, s: stok }; } }
+                let k = d.outlet+"___"+d.dept; if(!isMaster && !ignoreActual) { if(!sMap[k] || d.tanggal >= sMap[k].t) { sMap[k] = { t: d.tanggal, s: stok }; } }
                 
-                html += `<tr class="border-b border-gray-700/50 hover:bg-gray-700/80 transition-colors ${bgRow}"><td class="py-3 px-4 text-center"><input type="checkbox" value="${d.id}" class="cb-db-row w-3 h-3 rounded bg-gray-900 border-gray-600 cursor-pointer" onclick="window.checkDbRowCb()"></td><td class="py-3 px-4 text-center text-xs whitespace-nowrap">${tglLbl}</td><td class="py-3 px-4 text-gray-300 text-xs font-bold">${d.outlet}</td><td class="py-3 px-4 text-gray-400 text-xs">${d.dept}<br>${errTag}</td><td class="py-3 px-4 text-right text-gray-400 text-xs font-bold">Rp ${Math.round(d.target||0).toLocaleString()}</td><td class="py-3 px-4 text-right text-gray-500 text-xs font-bold">Rp ${Math.round(d.tProfit||0).toLocaleString()}</td><td class="py-3 px-4 text-right text-cyan-400 text-xs font-bold ${isMaster?'opacity-30':''}">Rp ${Math.round(a_O).toLocaleString()}</td><td class="py-3 px-4 text-right text-emerald-400 text-xs font-bold ${isMaster?'opacity-30':''}">Rp ${Math.round(a_P).toLocaleString()}</td><td class="py-3 px-4 text-right text-amber-400 text-xs ${isMaster?'opacity-30':''}">Rp ${Math.round(a_B).toLocaleString()}</td><td class="py-3 px-4 text-right text-fuchsia-400 text-xs font-bold ${isMaster?'opacity-30':''}">Rp ${Math.round(stok).toLocaleString()}</td><td class="py-3 px-4 text-center whitespace-nowrap"><button onclick="window.requestEdit('${d.id}')" class="text-blue-400 hover:text-white bg-blue-900/30 hover:bg-blue-600 p-2 rounded transition-colors mr-1 shadow-sm"><i class="fas fa-edit"></i></button><button onclick="window.triggerProtectedAction('delete', '${d.id}')" class="text-red-400 hover:text-white bg-red-900/30 hover:bg-red-600 p-2 rounded transition-colors shadow-sm"><i class="fas fa-trash-alt"></i></button></td></tr>`;
+                let opClass = ignoreActual ? 'opacity-30' : '';
+                html += `<tr class="border-b border-gray-700/50 hover:bg-gray-700/80 transition-colors ${bgRow}"><td class="py-3 px-4 text-center"><input type="checkbox" value="${d.id}" class="cb-db-row w-3 h-3 rounded bg-gray-900 border-gray-600 cursor-pointer" onclick="window.checkDbRowCb()"></td><td class="py-3 px-4 text-center text-xs whitespace-nowrap">${tglLbl}</td><td class="py-3 px-4 text-gray-300 text-xs font-bold">${d.outlet}</td><td class="py-3 px-4 text-gray-400 text-xs">${d.dept}<br>${errTag}</td><td class="py-3 px-4 text-right text-gray-400 text-xs font-bold ${opClass}">Rp ${Math.round(d.target||0).toLocaleString()}</td><td class="py-3 px-4 text-right text-gray-500 text-xs font-bold ${opClass}">Rp ${Math.round(d.tProfit||0).toLocaleString()}</td><td class="py-3 px-4 text-right text-cyan-400 text-xs font-bold ${(isMaster || ignoreActual)?'opacity-30':''}">Rp ${Math.round(d.omset||0).toLocaleString()}</td><td class="py-3 px-4 text-right text-emerald-400 text-xs font-bold ${(isMaster || ignoreActual)?'opacity-30':''}">Rp ${Math.round(d.profit||0).toLocaleString()}</td><td class="py-3 px-4 text-right text-amber-400 text-xs ${(isMaster || ignoreActual)?'opacity-30':''}">Rp ${Math.round(d.pembelian||0).toLocaleString()}</td><td class="py-3 px-4 text-right text-fuchsia-400 text-xs font-bold ${(isMaster || ignoreActual)?'opacity-30':''}">Rp ${Math.round(d.stock||0).toLocaleString()}</td><td class="py-3 px-4 text-center whitespace-nowrap"><button onclick="window.requestEdit('${d.id}')" class="text-blue-400 hover:text-white bg-blue-900/30 hover:bg-blue-600 p-2 rounded transition-colors mr-1 shadow-sm"><i class="fas fa-edit"></i></button><button onclick="window.triggerProtectedAction('delete', '${d.id}')" class="text-red-400 hover:text-white bg-red-900/30 hover:bg-red-600 p-2 rounded transition-colors shadow-sm"><i class="fas fa-trash-alt"></i></button></td></tr>`;
             });
             Object.values(sMap).forEach(v => maxStok += v.s);
             tbody.innerHTML = html;
@@ -1957,33 +2101,220 @@
         };
 
         window.triggerCelebration = function(isTest = false) {
-            const modal = document.getElementById('modal-celebration'); if(!modal) return;
-            if(isTest) document.getElementById('celebration-list').innerHTML = `<div class="bg-gray-800/50 p-3 rounded-lg border border-gray-600"><span class="font-bold text-emerald-400 block text-sm">Mode Test Kembang Api</span><span class="text-xs text-gray-400">Efek berjalan dengan baik.</span></div>`;
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0'); modal.children[0].classList.remove('scale-95');
-                if(window.confetti) {
-                    var duration = 3 * 1000; var animationEnd = Date.now() + duration; var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
-                    function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-                    var interval = setInterval(function() {
-                        var timeLeft = animationEnd - Date.now();
-                        if (timeLeft <= 0) return clearInterval(interval);
-                        var particleCount = 50 * (timeLeft / duration);
-                        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            try {
+                if (typeof window.confetti === 'undefined') { window.showToast("Library Kembang Api belum termuat.", "red"); return; }
+                
+                const modal = document.getElementById('modal-celebration');
+                if(!modal) return;
+
+                // Logika menghitung apakah target tercapai dimasukkan ke variabel 'achievements'
+                let isSuperConfetti = false;
+                let isNormalConfetti = false;
+                let achievements = [];
+
+                if (isTest) {
+                    isSuperConfetti = true;
+                    achievements.push(`<div class="bg-emerald-900/40 p-2 rounded border border-emerald-500/50"><span class="text-emerald-400 font-bold text-xs"><i class="fas fa-check-circle"></i> Test Kembang Api Super</span></div>`);
+                } else if (window.currentStats) {
+                    let s = window.currentStats;
+                    if (s.omsetAkt > 0 && s.omsetTgt > 0 && s.omsetAkt >= s.omsetTgt) {
+                        achievements.push(`<div class="bg-emerald-900/40 p-2 rounded border border-emerald-500/50"><span class="text-emerald-400 font-bold text-xs"><i class="fas fa-check-circle"></i> Target Omset Berjalan Tercapai!</span></div>`);
+                    }
+                    if (s.profitAkt > 0 && s.profitTgt > 0 && s.profitAkt >= s.profitTgt) {
+                        achievements.push(`<div class="bg-emerald-900/40 p-2 rounded border border-emerald-500/50"><span class="text-emerald-400 font-bold text-xs"><i class="fas fa-check-circle"></i> Target Profit Berjalan Tercapai!</span></div>`);
+                    }
+                    
+                    if (achievements.length === 2) {
+                        isSuperConfetti = true;
+                    } else if (achievements.length === 1) {
+                        isNormalConfetti = true;
+                    }
+                }
+
+                // Jika bukan mode test dan tidak ada target yang tercapai, batalkan perayaan
+                if (!isTest && !isSuperConfetti && !isNormalConfetti) {
+                    return; 
+                }
+
+                // Masukkan list pencapaian ke modal
+                const listEl = document.getElementById('celebration-list');
+                if (listEl) listEl.innerHTML = achievements.join('');
+
+                // Memunculkan Modal
+                modal.classList.remove('hidden'); 
+                setTimeout(() => { 
+                    modal.classList.remove('opacity-0'); 
+                    if(modal.children[0]) modal.children[0].classList.remove('scale-95'); 
+                }, 10);
+                
+                // LOGIKA KEMBANG API (CONFETTI)
+                if (isSuperConfetti) {
+                    // Confetti Premium / Atraktif (Warna Emas, Oranye, Hijau)
+                    var duration = 12 * 1000; 
+                    var animationEnd = Date.now() + duration; 
+                    var defaults = { startVelocity: 45, spread: 360, ticks: 100, zIndex: 10000, colors: ['#FFD700', '#FFA500', '#FF8C00', '#ffffff', '#00ff00'] };
+                    var randomInRange = function(min, max) { return Math.random() * (max - min) + min; };
+                    
+                    var interval = setInterval(function() { 
+                        var timeLeft = animationEnd - Date.now(); 
+                        if (timeLeft <= 0) { return clearInterval(interval); } 
+                        var particleCount = 80 * (timeLeft / duration); 
+                        window.confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } })); 
+                        window.confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } })); 
+                        if (timeLeft % 800 < 250) { window.confetti({ particleCount: 80, spread: 120, origin: { y: 0.6 }, zIndex: 10000, colors: ['#FFD700', '#FF8C00'] }); }
+                    }, 250);
+                } else if (isNormalConfetti) {
+                    // Confetti Standar
+                    var duration = 6 * 1000; 
+                    var animationEnd = Date.now() + duration; 
+                    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+                    var randomInRange = function(min, max) { return Math.random() * (max - min) + min; };
+                    
+                    var interval = setInterval(function() { 
+                        var timeLeft = animationEnd - Date.now(); 
+                        if (timeLeft <= 0) { return clearInterval(interval); } 
+                        var particleCount = 50 * (timeLeft / duration); 
+                        window.confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } })); 
+                        window.confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } })); 
                     }, 250);
                 }
-            }, 10);
+
+                // Menutup modal otomatis setelah 15 detik
+                setTimeout(() => { window.closeCelebration(); }, 15000);
+            } catch (error) {
+                console.error("Celebration Error:", error);
+            }
         };
 
+        window.lastCelebrationTrigger = "";
+        setInterval(() => { 
+            const now = new Date(); 
+            const h = now.getHours().toString().padStart(2, '0'); 
+            const m = now.getMinutes().toString().padStart(2, '0'); 
+            const timeStr = `${h}:${m}`; 
+            const triggerTimes = ["08:00", "10:00", "12:00", "13:30"]; // <--- Jadwal Alarm Kembang Api
+            const triggerKey = now.toDateString() + "_" + timeStr; 
+            
+            if (triggerTimes.includes(timeStr) && window.lastCelebrationTrigger !== triggerKey) { 
+                window.lastCelebrationTrigger = triggerKey; 
+                window.triggerCelebration(false); // <--- Memanggil kembang api (false = akan mengecek pencapaian target dulu)
+            } 
+        }, 10000);
+
         window.closeCelebration = function() {
-            const modal = document.getElementById('modal-celebration'); if(!modal) return;
-            modal.classList.add('opacity-0'); modal.children[0].classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 500);
+            try {
+                const targetModal = document.getElementById('modal-celebration'); 
+                if(!targetModal) return;
+                targetModal.classList.add('opacity-0'); 
+                if(targetModal.children[0]) targetModal.children[0].classList.add('scale-95');
+                setTimeout(() => targetModal.classList.add('hidden'), 500);
+            } catch (error) {
+                console.error("Close Celebration Error:", error);
+            }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
             window.initInputs(); window.setupNavigation();
+            
+            // FITUR IMPORT EXCEL & ANIMASI
+            const fileInput = document.getElementById('hidden-file-import');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const uploadModal = document.getElementById('modal-upload-wave');
+                    const statusTxt = document.getElementById('upload-status');
+                    const percentTxt = document.getElementById('upload-percent');
+                    
+                    if (uploadModal) {
+                        uploadModal.classList.remove('hidden');
+                        setTimeout(() => uploadModal.classList.remove('opacity-0'), 10);
+                    }
+                    if (statusTxt) statusTxt.innerText = "Membaca File Excel...";
+                    if (percentTxt) percentTxt.innerText = "0%";
+
+                    const reader = new FileReader();
+                    reader.onload = async function(ev) {
+                        try {
+                            const data = new Uint8Array(ev.target.result);
+                            const workbook = window.XLSX.read(data, { type: 'array' });
+                            const firstSheetName = workbook.SheetNames[0];
+                            const worksheet = workbook.Sheets[firstSheetName];
+                            const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { raw: true });
+                            
+                            if (statusTxt) statusTxt.innerText = "Memproses Data...";
+                            
+                            let newData = [];
+                            jsonData.forEach((row, i) => {
+                                // Fungsi bantu untuk mencari nama header kolom secara fleksibel (mengabaikan huruf besar/kecil)
+                                const getVal = (keys) => {
+                                    let foundKey = Object.keys(row).find(k => keys.some(searchKey => k.toLowerCase().includes(searchKey.toLowerCase())));
+                                    return foundKey ? row[foundKey] : undefined;
+                                };
+                                
+                                let dt = {
+                                    id: "import_" + Date.now() + "_" + i,
+                                    tanggal: parseInt(getVal(['tanggal', 'tgl']) || 1),
+                                    bulan: parseInt(getVal(['bulan', 'bln']) || (new Date().getMonth() + 1)),
+                                    tahun: parseInt(getVal(['tahun', 'thn']) || new Date().getFullYear()),
+                                    outlet: getVal(['outlet', 'cabang']) || 'Corporate',
+                                    dept: getVal(['departemen', 'dept', 'divisi']) || 'Lainnya',
+                                    target: parseFloat(getVal(['target omset', 't. omset', 'target']) || 0),
+                                    omset: parseFloat(getVal(['aktual omset', 'a. omset', 'omset', 'penjualan']) || 0),
+                                    tProfit: parseFloat(getVal(['target profit', 't. profit']) || 0),
+                                    profit: parseFloat(getVal(['aktual profit', 'a. profit', 'profit', 'laba']) || 0),
+                                    pembelian: parseFloat(getVal(['aktual pembelian', 'pembelian', 'beli']) || 0),
+                                    stock: parseFloat(getVal(['stok akhir', 'stok', 'stock', 'persediaan']) || 0),
+                                };
+                                newData.push(dt);
+                            });
+
+                            if (window.isCloudConnected && window.fsSaveBatchData) {
+                                if (statusTxt) statusTxt.innerText = "Menyimpan ke Cloud...";
+                                await window.fsSaveBatchData(newData, (progress) => {
+                                    if (percentTxt) percentTxt.innerText = Math.round(progress) + "%";
+                                });
+                                window.showToast(newData.length + " Data Berhasil Diimport ke Cloud!", "emerald");
+                                
+                                if (uploadModal) {
+                                    uploadModal.classList.add('opacity-0');
+                                    setTimeout(() => { uploadModal.classList.add('hidden'); fileInput.value = ''; }, 500);
+                                }
+                            } else {
+                                // Simulasi Loading Animasi untuk Penyimpanan Lokal
+                                let progress = 0;
+                                if (statusTxt) statusTxt.innerText = "Menyimpan ke Lokal...";
+                                const interval = setInterval(() => {
+                                    progress += 15;
+                                    if (percentTxt) percentTxt.innerText = Math.min(progress, 100) + "%";
+                                    if (progress >= 100) {
+                                        clearInterval(interval);
+                                        window.data = [...window.data, ...newData];
+                                        if(typeof window.renderHarian === 'function') {
+                                            window.renderHarian(); window.renderDirektori(); window.renderDatabase();
+                                        }
+                                        window.showToast(newData.length + " Data Berhasil Diimport (Lokal)!", "emerald");
+                                        if (uploadModal) {
+                                            uploadModal.classList.add('opacity-0');
+                                            setTimeout(() => { uploadModal.classList.add('hidden'); fileInput.value = ''; }, 500);
+                                        }
+                                    }
+                                }, 150);
+                            }
+                        } catch(err) {
+                            console.error("Import Error:", err);
+                            window.showToast("Gagal membaca Excel. Pastikan format tabel benar.", "red");
+                            if (uploadModal) {
+                                uploadModal.classList.add('opacity-0');
+                                setTimeout(() => { uploadModal.classList.add('hidden'); fileInput.value = ''; }, 500);
+                            }
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+
             ['harFilterOutlet', 'harFilterDivisi', 'harFilterDept', 'harFilterBulan', 'harFilterTahun', 'harFilterTglAwal', 'harFilterTglAkhir'].forEach(id => { let el = document.getElementById(id); if (el) el.addEventListener('change', window.renderHarian); });
             ['dirFilterOutlet', 'dirFilterDivisi', 'dirFilterDept', 'dirFilterBulan', 'dirFilterTahun'].forEach(id => { let el = document.getElementById(id); if (el) el.addEventListener('change', window.renderDirektori); });
             ['grfFilterOutlet', 'grfFilterDivisi', 'grfFilterBulan', 'grfFilterTahun'].forEach(id => { let el = document.getElementById(id); if (el) el.addEventListener('change', window.renderGrafik); });
@@ -1995,6 +2326,19 @@
             
             let pM = document.getElementById('btn-nav-harian'); if(pM) pM.click();
             window.setParamMode('harian');
+
+            // Cek lokal logo jika tidak terhubung cloud (mempertahankan logo jika tab ditutup saat offline)
+            setTimeout(() => {
+                if (!window.isCloudConnected) {
+                    const localLogo = localStorage.getItem('local_header_logo');
+                    if (localLogo) {
+                        const lg = document.getElementById('header-logo');
+                        const inLogo = document.getElementById('in-logo-url');
+                        if (lg) lg.src = window.getDisplayLogoUrl ? window.getDisplayLogoUrl(localLogo) : localLogo;
+                        if (inLogo) inLogo.value = localLogo;
+                    }
+                }
+            }, 1000);
         });
     </script>
 </body>
