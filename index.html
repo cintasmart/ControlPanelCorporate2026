@@ -2296,16 +2296,32 @@
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
 
-            // Menggunakan Gemini 1.5 Flash (Model andalan yang stabil & support public API Key)
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            // PERBAIKAN: Menggunakan tag "-latest" agar server otomatis mencari versi yang tersedia
+            let apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
             try {
-                const response = await fetch(apiUrl, {
+                let response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 
+                // Jika server Google menolak karena model tidak ditemukan (Error 404), otomatis pindah ke versi stabil (gemini-pro)
+                if (response.status === 404) {
+                    apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+                    
+                    // Model lawas (gemini-pro v1.0) tidak mendukung parameter systemInstruction, jadi kita gabungkan secara manual
+                    const fallbackPayload = {
+                        contents: [{ parts: [{ text: "INSTRUKSI SISTEM: " + systemPrompt + "\n\nDATA: " + userPrompt }] }]
+                    };
+                    
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fallbackPayload)
+                    });
+                }
+
                 if (!response.ok) {
                     const errData = await response.json();
                     if (response.status === 400 || response.status === 403) {
