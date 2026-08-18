@@ -796,6 +796,12 @@
 
         window.getBulanArray = function(filterVal) { if(filterVal === 'Q1') return [1,2,3]; if(filterVal === 'Q2') return [4,5,6]; if(filterVal === 'Q3') return [7,8,9]; if(filterVal === 'Q4') return [10,11,12]; if(filterVal === 'S1') return [1,2,3,4,5,6]; if(filterVal === 'S2') return [7,8,9,10,11,12]; if(filterVal === 'ALL') return [1,2,3,4,5,6,7,8,9,10,11,12]; let valNum = parseInt(filterVal); return !isNaN(valNum) ? [valNum] : [new Date().getMonth() + 1]; };
 
+        // --- KONFIGURASI API KEY GEMINI GLOBAL ---
+        // Masukkan API Key Anda di antara tanda kutip di bawah ini.
+        // Jika sudah diisi, fitur AI akan otomatis aktif di semua browser/perangkat.
+        // Contoh: window.GLOBAL_GEMINI_KEY = "AQ.Ab8RN6JDVAk5WExXZPyYjK_8DSR5pB0Or6yJcvHQtzcAUYi_bQ";
+        window.GLOBAL_GEMINI_KEY = "AQ.Ab8RN6JDVAk5WExXZPyYjK_8DSR5pB0Or6yJcvHQtzcAUYi_bQ"; 
+
         window.renderSmartInsights = function(aggHarian, masterMap, stockTracker, rangeHari, jmlHariBulanIni) {
             let container = document.getElementById('smart-insights-container');
             if(!container) return;
@@ -2230,15 +2236,42 @@
             }
         };
 
+        window.saveGeminiKey = function() {
+            let key = document.getElementById('in-gemini-key').value.trim();
+            if(key) {
+                localStorage.setItem('dcs_gemini_key', key);
+                window.generateGeminiInsights(); // Otomatis mengulang proses analisa
+            } else {
+                window.showToast("API Key tidak boleh kosong!", "amber");
+            }
+        };
+
         window.generateGeminiInsights = async function() {
             const container = document.getElementById('gemini-insights-result');
             const btn = document.getElementById('btn-gemini-insight');
             if(!container || !btn) return;
 
+            // Cek apakah API Key tertanam di dalam kode (Global) ATAU tersimpan di browser lokal
+            let apiKey = (window.GLOBAL_GEMINI_KEY && window.GLOBAL_GEMINI_KEY.trim() !== "") 
+                         ? window.GLOBAL_GEMINI_KEY.trim() 
+                         : localStorage.getItem('dcs_gemini_key');
+            
+            // Jika sama sekali tidak ada API Key
+            if (!apiKey) {
+                container.innerHTML = `<div class="bg-gray-900/80 p-4 rounded-xl border border-indigo-500/50 mt-4 shadow-inner">
+                    <p class="text-[11px] text-indigo-300 mb-3 font-semibold"><i class="fas fa-key text-indigo-400 mr-1"></i> <b>Setup AI:</b> API Key global belum disetel di dalam kode. Anda dapat memasukkannya secara manual di bawah ini untuk browser ini saja.</p>
+                    <div class="flex gap-2">
+                        <input type="password" id="in-gemini-key" class="flex-1 bg-gray-900 border border-indigo-500/50 rounded-lg p-2.5 text-white text-xs outline-none focus:border-indigo-400 transition-colors shadow-inner" placeholder="Paste API Key (AIzaSy...)">
+                        <button onclick="window.saveGeminiKey()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-lg text-xs font-black transition-colors shadow-lg shadow-indigo-600/30">SIMPAN KUNCI</button>
+                    </div>
+                </div>`;
+                return;
+            }
+
             // Indikator Loading
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Sedang Menganalisa...';
             btn.disabled = true;
-            container.innerHTML = `<div class="bg-indigo-900/50 p-4 rounded border border-indigo-500/50 text-indigo-300 text-xs font-bold animate-pulse text-center"><i class="fas fa-brain fa-spin text-xl mb-2"></i><br>Gemini Pro sedang memproses penalaran analitik mendalam...</div>`;
+            container.innerHTML = `<div class="bg-indigo-900/50 p-4 rounded-xl border border-indigo-500/50 text-indigo-300 text-xs font-bold animate-pulse text-center mt-3 shadow-inner"><i class="fas fa-brain fa-spin text-2xl mb-2 text-indigo-400"></i><br>Gemini AI sedang memproses penalaran analitik mendalam...</div>`;
 
             // Menyusun Konteks Data
             const stats = window.currentStats;
@@ -2254,7 +2287,7 @@
                 `;
             }
 
-            // Menyusun Prompt Sistem (Di-upgrade untuk Penalaran Tinggi)
+            // Menyusun Prompt Sistem 
             const systemPrompt = "Anda adalah Data Scientist dan Direktur Retail Eksekutif kelas dunia yang ahli dalam membaca metrik operasional harian. Anda akan diberikan data kinerja agregat. Tugas Anda: Lakukan penalaran tingkat tinggi (deep reasoning) mengenai korelasi antara Omset, Margin, dan Umur Persediaan (DSI). Temukan akar masalah (bottleneck) atau peluang tersembunyi. Berikan 3 rekomendasi strategis dan spesifik (bukan saran umum) yang bisa dieksekusi hari ini juga. Gunakan bahasa Indonesia yang tegas, profesional, dan berbasis data. FORMAT WAJIB: Keluarkan hasil HANYA berupa tag HTML murni tanpa blok markdown (tanpa ```html). Formatlah dengan struktur visual menggunakan class Tailwind CSS seperti: <div class='flex flex-col gap-3 mt-3'><div class='bg-gray-900/80 p-4 rounded-xl border-l-4 border-indigo-500 text-xs text-gray-200 shadow-md'><h4 class='text-indigo-400 font-black mb-1'>[Judul Insight]</h4><p>...</p></div></div>";
             const userPrompt = "Lakukan penalaran analitis mendalam dari metrik berikut. Evaluasi kesehatan finansial kita hari ini dan berikan 3 manuver strategis.\n\n" + contextText;
 
@@ -2263,9 +2296,8 @@
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
 
-            const apiKey = ""; // Kunci API dibiarkan kosong karena akan disuplai secara otomatis oleh Canvas
-            // Menggunakan Gemini 3 Flash Preview (Model generasi terbaru yang didukung environment ini) dengan prompt penalaran tinggi
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            // Menggunakan Gemini 1.5 Flash (Model andalan yang stabil & support public API Key)
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             try {
                 const response = await fetch(apiUrl, {
@@ -2274,22 +2306,31 @@
                     body: JSON.stringify(payload)
                 });
                 
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
-                    let htmlContent = result.candidates[0].content.parts[0].text;
-                    // Membersihkan format markdown yang terkadang menempel
-                    htmlContent = htmlContent.replace(/```html/g, '').replace(/```/g, '').trim();
-                    container.innerHTML = htmlContent;
+                if (!response.ok) {
+                    const errData = await response.json();
+                    if (response.status === 400 || response.status === 403) {
+                        // Kunci API Salah atau Expired
+                        localStorage.removeItem('dcs_gemini_key');
+                        container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded-xl text-xs font-bold mt-3"><i class="fas fa-exclamation-triangle"></i> Kunci API tidak valid atau dilarang (Error ${response.status}). Silakan klik tombol analisa ulang untuk memasukkan kunci yang benar.</div>`;
+                    } else {
+                        container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded-xl text-xs font-bold mt-3"><i class="fas fa-exclamation-triangle"></i> Terjadi kesalahan pada server Google: ${errData.error?.message || response.statusText}</div>`;
+                    }
                 } else {
-                    container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded text-xs font-bold"><i class="fas fa-exclamation-triangle"></i> Gagal menerima struktur data AI.</div>`;
+                    const result = await response.json();
+                    if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
+                        let htmlContent = result.candidates[0].content.parts[0].text;
+                        htmlContent = htmlContent.replace(/```html/g, '').replace(/```/g, '').trim();
+                        container.innerHTML = htmlContent;
+                    } else {
+                        container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded-xl text-xs font-bold mt-3"><i class="fas fa-exclamation-triangle"></i> Gagal menerima struktur data dari AI. Format tidak dikenali.</div>`;
+                    }
                 }
             } catch(err) {
-                container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded text-xs font-bold"><i class="fas fa-wifi"></i> Koneksi ke Gemini API terputus. Silakan coba lagi.</div>`;
+                container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded-xl text-xs font-bold mt-3"><i class="fas fa-wifi"></i> Koneksi ke jaringan Gemini API terputus. Silakan coba lagi.</div>`;
             }
             
             // Kembalikan Tombol
-            btn.innerHTML = '<i class="fas fa-robot"></i> Analisa Ulang dengan DCS Ai';
+            btn.innerHTML = '<i class="fas fa-robot"></i> Analisa Ulang dengan DCS AI';
             btn.disabled = false;
         };
 
