@@ -39,7 +39,7 @@
 
     <header class="w-full max-w-5xl mx-auto relative z-10 mb-8 mt-4">
         <div class="flex items-center justify-center gap-3 mb-2">
-            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.2.7</h3>
+            <h3 class="font-heading text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] font-black">Report Kinerja 2.2.8</h3>
             <button id="btn-login-sync" class="w-8 h-8 rounded-full bg-red-500/20 border border-red-500 text-red-500 flex items-center justify-center text-xs transition-all shadow-[0_0_10px_rgba(239,68,68,0.5)] cursor-pointer hover:scale-110" title="Offline / Terkunci" onclick="window.toggleLoginModal()">
                 <i id="icon-login-sync" class="fas fa-lock"></i>
             </button>
@@ -830,6 +830,9 @@
                 }
             });
 
+            // Layout Khusus Gemini UI
+            let geminiUI = `<div class="mt-5 p-4 bg-indigo-950/30 border border-indigo-500/30 rounded-xl relative overflow-hidden shadow-inner"><div class="absolute right-0 top-0 opacity-10 text-6xl text-indigo-500 transform translate-x-4 -translate-y-4"><i class="fas fa-brain"></i></div><div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 relative z-10"><div><h4 class="text-indigo-400 font-black text-sm uppercase tracking-wider flex items-center gap-2"><i class="fas fa-sparkles text-amber-300"></i> DCS AI Analyst</h4><p class="text-[10px] text-gray-400 mt-0.5">Analisis komprehensif performa global berbasis Large Language Model.</p></div><button id="btn-gemini-insight" onclick="window.generateGeminiInsights()" class="mt-2 md:mt-0 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-[0_0_10px_rgba(79,70,229,0.5)] transition-all flex items-center gap-2 cursor-pointer"><i class="fas fa-robot"></i> Minta Analisa DCS AI</button></div><div id="gemini-insights-result" class="relative z-10 text-sm text-gray-300"></div></div>`;
+
             if(insights.length > 0) {
                 insights.sort((a,b) => {
                     if(a.includes('rose') && !b.includes('rose')) return -1;
@@ -838,10 +841,11 @@
                     if(b.includes('amber') && !a.includes('amber')) return 1;
                     return 0;
                 });
-                let htmlStr = `<div class="glass p-5 rounded-2xl border-t-4 border-cyan-500 shadow-lg"><h3 class="text-xs text-cyan-400 font-black uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fas fa-robot animate-pulse"></i> Smart Auto-Insights AI</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${insights.slice(0, 3).join('')}</div></div>`;
+                let htmlStr = `<div class="glass p-5 rounded-2xl border-t-4 border-cyan-500 shadow-lg"><h3 class="text-xs text-cyan-400 font-black uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fas fa-cogs"></i> Rule-Based Insights</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${insights.slice(0, 3).join('')}</div>${geminiUI}</div>`;
                 container.innerHTML = htmlStr;
             } else {
-                container.innerHTML = `<div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 flex items-center justify-center gap-2 shadow-inner"><i class="fas fa-check-circle text-emerald-500"></i> <span class="text-xs text-gray-400 font-bold">AI Monitor: Semua departemen beroperasi dalam rentang metrik wajar.</span></div>`;
+                let htmlStr = `<div class="glass p-5 rounded-2xl border-t-4 border-cyan-500 shadow-lg"><div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 flex items-center justify-center gap-2 shadow-inner"><i class="fas fa-check-circle text-emerald-500"></i> <span class="text-xs text-gray-400 font-bold">Rule Monitor: Semua departemen beroperasi dalam rentang metrik wajar.</span></div>${geminiUI}</div>`;
+                container.innerHTML = htmlStr;
             }
         };
 
@@ -930,8 +934,9 @@
             let masterMap = {};
             dataMaster.forEach(d => { 
                 let k = d.outlet + "___" + d.dept; 
-                if (!masterMap[k]) { masterMap[k] = { dept: d.dept, tO: d.target||0, tP: d.tProfit||0, tPem: (d.target||0)-(d.tProfit||0) }; } 
-                else { masterMap[k].tO = Math.max(masterMap[k].tO, d.target||0); masterMap[k].tP = Math.max(masterMap[k].tP, d.tProfit||0); masterMap[k].tPem = masterMap[k].tO - masterMap[k].tP; } 
+                let vTgt = parseFloat(d.target) || 0; let vTPro = parseFloat(d.tProfit) || 0;
+                if (!masterMap[k]) { masterMap[k] = { dept: d.dept, tO: vTgt, tP: vTPro, tPem: vTgt - vTPro }; } 
+                else { masterMap[k].tO = Math.max(masterMap[k].tO, vTgt); masterMap[k].tP = Math.max(masterMap[k].tP, vTPro); masterMap[k].tPem = masterMap[k].tO - masterMap[k].tP; } 
             });
 
             let globalLastTgl = 0;
@@ -951,19 +956,22 @@
 
                 if (!aggHarian[k]) aggHarian[k] = { dept: d.dept, baseTO:0, baseTP:0, baseTB:0, aktO:0, aktP:0, aktB:0, stock:0 };
                 
+                let aTgt = parseFloat(d.target) || 0; let aTPro = parseFloat(d.tProfit) || 0;
+                let dStk = parseFloat(d.stock) || 0;
+
                 if (!ignore) {
-                    aggHarian[k].baseTO += (d.target||0); aggHarian[k].baseTP += (d.tProfit||0); aggHarian[k].baseTB = aggHarian[k].baseTO - aggHarian[k].baseTP;
+                    aggHarian[k].baseTO += aTgt; aggHarian[k].baseTP += aTPro; aggHarian[k].baseTB = aggHarian[k].baseTO - aggHarian[k].baseTP;
                 }
                 
-                let aO = ignore ? 0 : (d.omset||0); let aP = ignore ? 0 : (d.profit||0); let aB = ignore ? 0 : (d.pembelian||0);
+                let aO = ignore ? 0 : parseFloat(d.omset || 0); let aP = ignore ? 0 : parseFloat(d.profit || 0); let aB = ignore ? 0 : parseFloat(d.pembelian || 0);
 
                 aggHarian[k].aktO += aO; aggHarian[k].aktP += aP; aggHarian[k].aktB += aB; 
                 
                 if (!ignore) {
                     totAktOmset += aO; totAktProfit += aP; totAktBeli += aB; 
-                    totInputBerjalanOmset += (d.target||0); totInputBerjalanProfit += (d.tProfit||0); 
+                    totInputBerjalanOmset += aTgt; totInputBerjalanProfit += aTPro; 
                     if(!stockTracker[k]) stockTracker[k] = { tgl: -1, val: 0 }; 
-                    if (d.stock !== 0 && d.tanggal >= stockTracker[k].tgl) { stockTracker[k].tgl = d.tanggal; stockTracker[k].val = d.stock; }
+                    if (dStk !== 0 && d.tanggal >= stockTracker[k].tgl) { stockTracker[k].tgl = d.tanggal; stockTracker[k].val = dStk; }
                 }
             });
             totInputBerjalanBeli = totInputBerjalanOmset - totInputBerjalanProfit;
@@ -1051,21 +1059,30 @@
             if (tbDetail) {
                 if (dataHarian.length === 0) { tbDetail.innerHTML = ''; if(tbEmpty) tbEmpty.style.display = 'block'; } 
                 else {
-                    if(tbEmpty) tbEmpty.style.display = 'none'; let groupedByDate = {};
+                    let groupedByDate = {};
                     dataHarian.forEach(d => {
                         let isCorp = d.outlet === 'Corporate'; let ignore = isCorp && isAggregateMode;
                         if (!groupedByDate[d.tanggal]) { groupedByDate[d.tanggal] = { tanggal: d.tanggal, target: 0, omset: 0, tProfit: 0, profit: 0, tPembelian: 0, pembelian: 0, stock: 0, details: [] }; }
+                        
+                        let cTgt = parseFloat(d.target) || 0; let cOms = parseFloat(d.omset) || 0; 
+                        let cTPro = parseFloat(d.tProfit) || 0; let cPro = parseFloat(d.profit) || 0; 
+                        let cPem = parseFloat(d.pembelian) || 0; let cStk = parseFloat(d.stock) || 0;
+
                         if (!ignore) {
-                            groupedByDate[d.tanggal].target += (d.target || 0); groupedByDate[d.tanggal].omset += (d.omset || 0); groupedByDate[d.tanggal].tProfit += (d.tProfit || 0); groupedByDate[d.tanggal].profit += (d.profit || 0); groupedByDate[d.tanggal].pembelian += (d.pembelian || 0); groupedByDate[d.tanggal].stock += (d.stock || 0); 
+                            groupedByDate[d.tanggal].target += cTgt; groupedByDate[d.tanggal].omset += cOms; 
+                            groupedByDate[d.tanggal].tProfit += cTPro; groupedByDate[d.tanggal].profit += cPro; 
+                            groupedByDate[d.tanggal].pembelian += cPem; groupedByDate[d.tanggal].stock += cStk; 
                         }
-                        groupedByDate[d.tanggal].details.push(d);
+                        
+                        let cleanData = {...d, target: cTgt, omset: cOms, tProfit: cTPro, profit: cPro, pembelian: cPem, stock: cStk};
+                        groupedByDate[d.tanggal].details.push(cleanData);
                     });
 
                     let htmlDet = '';
                     Object.keys(groupedByDate).sort((a,b) => parseInt(a) - parseInt(b)).forEach(tgl => {
                         let g = groupedByDate[tgl]; g.tPembelian = g.target - g.tProfit;
                         let mTgtVal = g.target > 0 ? (g.tProfit / g.target) * 100 : 0; let mAktVal = g.omset > 0 ? (g.profit / g.omset) * 100 : 0; let gMarginCol = mAktVal >= mTgtVal ? 'text-emerald-400' : 'text-rose-400';
-                        htmlDet += `<tr class="border-b border-gray-600 hover:bg-gray-700 transition-colors bg-gray-800 cursor-pointer shadow-md" onclick="window.toggleDetailRow('${tgl}')"><td class="py-3 px-4 text-center font-black text-emerald-400"><div class="flex items-center justify-center gap-2"><i id="icon-det-${tgl}" class="fas fa-chevron-right text-[10px] transition-transform"></i><span>${g.tanggal}</span></div></td><td class="py-3 px-4 text-amber-400 font-bold text-xs uppercase tracking-widest"><i class="fas fa-layer-group mr-2 opacity-75 text-[10px]"></i>Total Aktual Harian</td><td class="py-3 px-4 text-right text-gray-300 text-xs font-bold">Rp ${Math.round(g.target).toLocaleString()}</td><td class="py-3 px-4 text-right text-cyan-400 text-xs font-bold">Rp ${Math.round(g.omset).toLocaleString()}</td><td class="py-3 px-4 text-right text-gray-400 text-xs font-bold">Rp ${Math.round(g.tProfit).toLocaleString()}</td><td class="py-3 px-4 text-right text-emerald-400 text-xs font-bold">Rp ${Math.round(g.profit).toLocaleString()}</td><td class="py-3 px-4 text-right text-amber-400 text-xs">Rp ${Math.round(g.pembelian).toLocaleString()}</td><td class="py-3 px-4 text-center text-[10px] whitespace-nowrap"><span class="${gMarginCol} font-bold">${mAktVal.toFixed(2)}%</span> <span class="text-gray-500 mx-1">|</span> <span class="text-gray-400">${mTgtVal.toFixed(2)}%</span></td><td class="py-3 px-4 text-right text-fuchsia-400 font-bold text-xs">Rp ${Math.round(g.stock).toLocaleString()}</td><td class="py-3 px-4 text-center"><span class="bg-gray-900 px-2 py-1 rounded text-[9px] text-gray-400 font-bold tracking-widest shadow-inner">${g.details.length} DATA</span></td></tr>`;
+                        htmlDet += `<tr class="border-b border-gray-600 hover:bg-gray-700 transition-colors bg-gray-800 cursor-pointer shadow-md" onclick="window.toggleDetailRow('${tgl}')"><td class="py-3 px-4 text-center font-black text-emerald-400"><div class="flex items-center justify-center gap-2"><i id="icon-dir-det-${tgl}" class="fas fa-chevron-right text-[10px] transition-transform"></i><span>${g.tanggal}</span></div></td><td class="py-3 px-4 text-amber-400 font-bold text-xs uppercase tracking-widest"><i class="fas fa-layer-group mr-2 opacity-75 text-[10px]"></i>Total Aktual Harian</td><td class="py-3 px-4 text-right text-gray-300 text-xs font-bold">Rp ${Math.round(g.target).toLocaleString()}</td><td class="py-3 px-4 text-right text-cyan-400 text-xs font-bold">Rp ${Math.round(g.omset).toLocaleString()}</td><td class="py-3 px-4 text-right text-gray-400 text-xs font-bold">Rp ${Math.round(g.tProfit).toLocaleString()}</td><td class="py-3 px-4 text-right text-emerald-400 text-xs font-bold">Rp ${Math.round(g.profit).toLocaleString()}</td><td class="py-3 px-4 text-right text-amber-400 text-xs">Rp ${Math.round(g.pembelian).toLocaleString()}</td><td class="py-3 px-4 text-center text-[10px] whitespace-nowrap"><span class="${gMarginCol} font-bold">${mAktVal.toFixed(2)}%</span> <span class="text-gray-500 mx-1">|</span> <span class="text-gray-400">${mTgtVal.toFixed(2)}%</span></td><td class="py-3 px-4 text-right text-fuchsia-400 font-bold text-xs">Rp ${Math.round(g.stock).toLocaleString()}</td><td class="py-3 px-4 text-center"><span class="bg-gray-900 px-2 py-1 rounded text-[9px] text-gray-400 font-bold tracking-widest shadow-inner">${g.details.length} DATA</span></td></tr>`;
                         g.details.forEach(d => {
                             let dTgtVal = d.target > 0 ? (d.tProfit / d.target) * 100 : 0; let dAktVal = d.omset > 0 ? (d.profit / d.omset) * 100 : 0; let dMarginCol = dAktVal >= dTgtVal ? 'text-emerald-500/80' : 'text-rose-500/80'; let actualBeliD = (d.pembelian||0);
                             htmlDet += `<tr class="border-b border-gray-800/50 hover:bg-gray-800/80 transition-colors bg-gray-900/40 hidden detail-row-item-${tgl}"><td class="py-2.5 px-4 text-center font-bold text-gray-600"><i class="fas fa-level-up-alt rotate-90 text-[10px]"></i></td><td class="py-2.5 px-4 pl-6 border-l-2 border-emerald-500/20"><div class="font-bold text-cyan-500 text-xs mb-0.5">${d.outlet}</div><div class="text-[10px] font-bold uppercase tracking-wide text-gray-500">${window.normalizeName(d.dept, 'dept')}</div></td><td class="py-2.5 px-4 text-right text-gray-400 text-xs font-bold">Rp ${Math.round(d.target||0).toLocaleString()}</td><td class="py-2.5 px-4 text-right text-cyan-500/80 text-xs font-bold">Rp ${Math.round(d.omset||0).toLocaleString()}</td><td class="py-2.5 px-4 text-right text-gray-400 text-xs font-bold">Rp ${Math.round(d.tProfit||0).toLocaleString()}</td><td class="py-2.5 px-4 text-right text-emerald-500/80 text-xs font-bold">Rp ${Math.round(d.profit||0).toLocaleString()}</td><td class="py-2.5 px-4 text-right text-amber-500/80 text-xs">Rp ${Math.round(actualBeliD).toLocaleString()}</td><td class="py-2.5 px-4 text-center text-[10px] whitespace-nowrap"><span class="${dMarginCol} font-bold">${dAktVal.toFixed(2)}%</span> <span class="text-gray-700 mx-1">|</span> <span class="text-gray-500">${dTgtVal.toFixed(2)}%</span></td><td class="py-2.5 px-4 text-right text-fuchsia-500/80 font-bold text-xs">Rp ${Math.round(d.stock||0).toLocaleString()}</td><td class="py-2.5 px-4 text-center"><button onclick="event.stopPropagation(); window.requestEdit('${d.id}')" class="text-blue-500 hover:text-white bg-blue-900/20 hover:bg-blue-600 p-1.5 rounded transition-colors" title="Edit"><i class="fas fa-edit text-[10px]"></i></button></td></tr>`;
@@ -2000,7 +2017,7 @@
             tglDropdowns.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
-                    if(id === 'dbFilterTanggalDrop') el.innerHTML = `<option value="ALL">Semua Tanggal (ALL)</option><option value="0">Master Bulanan (Tgl 0)</option>`;
+                    if(id === 'dbFilterTanggalDrop') el.innerHTML = `<option value="ALL">Semua Tanggal (ALL)</option><option value="0">Master Bulanan (Tgl 0)</option><option value="-1">Data Invalid / Error (-1)</option>`;
                     else el.innerHTML = '';
                     for(let i = 1; i <= 31; i++) { el.innerHTML += `<option value="${i}">${i.toString().padStart(2, '0')}</option>`; }
                     if(id === 'harFilterTglAwal') el.value = 1;
@@ -2213,6 +2230,69 @@
             }
         };
 
+        window.generateGeminiInsights = async function() {
+            const container = document.getElementById('gemini-insights-result');
+            const btn = document.getElementById('btn-gemini-insight');
+            if(!container || !btn) return;
+
+            // Indikator Loading
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Sedang Menganalisa...';
+            btn.disabled = true;
+            container.innerHTML = `<div class="bg-indigo-900/50 p-4 rounded border border-indigo-500/50 text-indigo-300 text-xs font-bold animate-pulse text-center"><i class="fas fa-brain fa-spin text-xl mb-2"></i><br>Gemini Pro sedang memproses penalaran analitik mendalam...</div>`;
+
+            // Menyusun Konteks Data
+            const stats = window.currentStats;
+            let contextText = "Data tidak memadai.";
+            if (stats) {
+                contextText = `
+                [STATISTIK KINERJA GLOBAL TERPILIH]
+                - Aktual Omset: Rp ${Math.round(stats.omsetAkt)} (Target berjalan: Rp ${Math.round(stats.omsetTgt)})
+                - Aktual Profit: Rp ${Math.round(stats.profitAkt)} (Target berjalan: Rp ${Math.round(stats.profitTgt)})
+                - Aktual Beli: Rp ${Math.round(stats.beliAkt)} (Target budget beli: Rp ${Math.round(stats.beliTgt)})
+                - Margin Kotor: ${stats.marginAkt.toFixed(2)}% (Target margin: ${stats.marginTgt.toFixed(2)}%)
+                - DSI (Days Sales Inventory / Umur Persediaan): ${stats.dsi.toFixed(1)} Hari
+                `;
+            }
+
+            // Menyusun Prompt Sistem (Di-upgrade untuk Penalaran Tinggi)
+            const systemPrompt = "Anda adalah Data Scientist dan Direktur Retail Eksekutif kelas dunia yang ahli dalam membaca metrik operasional harian. Anda akan diberikan data kinerja agregat. Tugas Anda: Lakukan penalaran tingkat tinggi (deep reasoning) mengenai korelasi antara Omset, Margin, dan Umur Persediaan (DSI). Temukan akar masalah (bottleneck) atau peluang tersembunyi. Berikan 3 rekomendasi strategis dan spesifik (bukan saran umum) yang bisa dieksekusi hari ini juga. Gunakan bahasa Indonesia yang tegas, profesional, dan berbasis data. FORMAT WAJIB: Keluarkan hasil HANYA berupa tag HTML murni tanpa blok markdown (tanpa ```html). Formatlah dengan struktur visual menggunakan class Tailwind CSS seperti: <div class='flex flex-col gap-3 mt-3'><div class='bg-gray-900/80 p-4 rounded-xl border-l-4 border-indigo-500 text-xs text-gray-200 shadow-md'><h4 class='text-indigo-400 font-black mb-1'>[Judul Insight]</h4><p>...</p></div></div>";
+            const userPrompt = "Lakukan penalaran analitis mendalam dari metrik berikut. Evaluasi kesehatan finansial kita hari ini dan berikan 3 manuver strategis.\n\n" + contextText;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            const apiKey = ""; // Kunci API dibiarkan kosong karena akan disuplai secara otomatis oleh Canvas
+            // Menggunakan Gemini 3 Flash Preview (Model generasi terbaru yang didukung environment ini) dengan prompt penalaran tinggi
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
+                    let htmlContent = result.candidates[0].content.parts[0].text;
+                    // Membersihkan format markdown yang terkadang menempel
+                    htmlContent = htmlContent.replace(/```html/g, '').replace(/```/g, '').trim();
+                    container.innerHTML = htmlContent;
+                } else {
+                    container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded text-xs font-bold"><i class="fas fa-exclamation-triangle"></i> Gagal menerima struktur data AI.</div>`;
+                }
+            } catch(err) {
+                container.innerHTML = `<div class="bg-rose-900/40 border border-rose-500 text-rose-400 p-3 rounded text-xs font-bold"><i class="fas fa-wifi"></i> Koneksi ke Gemini API terputus. Silakan coba lagi.</div>`;
+            }
+            
+            // Kembalikan Tombol
+            btn.innerHTML = '<i class="fas fa-robot"></i> Analisa Ulang dengan DCS Ai';
+            btn.disabled = false;
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             window.initInputs(); window.setupNavigation();
             
@@ -2248,24 +2328,38 @@
                             let newData = [];
                             jsonData.forEach((row, i) => {
                                 // Fungsi bantu untuk mencari nama header kolom secara fleksibel (mengabaikan huruf besar/kecil)
-                                const getVal = (keys) => {
-                                    let foundKey = Object.keys(row).find(k => keys.some(searchKey => k.toLowerCase().includes(searchKey.toLowerCase())));
+                                const getVal = (keys, excludeKeys = []) => {
+                                    let foundKey = Object.keys(row).find(k => {
+                                        let keyLow = k.toLowerCase();
+                                        let isMatch = keys.some(searchKey => keyLow.includes(searchKey.toLowerCase()));
+                                        let isExcluded = excludeKeys.some(exKey => keyLow.includes(exKey.toLowerCase()));
+                                        return isMatch && !isExcluded;
+                                    });
                                     return foundKey ? row[foundKey] : undefined;
                                 };
                                 
+                                // Fungsi bantu ekstraksi angka absolut (kebal terhadap format Rp/Titik/Koma dari Excel)
+                                const getNum = (keys, excludeKeys = []) => {
+                                    let val = getVal(keys, excludeKeys);
+                                    if(typeof val === 'string') val = val.replace(/[^0-9.-]+/g,"");
+                                    let p = parseFloat(val); return isNaN(p) ? 0 : p;
+                                };
+                                
+                                let rawTgl = parseInt(getVal(['tanggal', 'tgl']));
+                                
                                 let dt = {
                                     id: "import_" + Date.now() + "_" + i,
-                                    tanggal: parseInt(getVal(['tanggal', 'tgl']) || 1),
-                                    bulan: parseInt(getVal(['bulan', 'bln']) || (new Date().getMonth() + 1)),
-                                    tahun: parseInt(getVal(['tahun', 'thn']) || new Date().getFullYear()),
+                                    tanggal: isNaN(rawTgl) ? 1 : rawTgl,
+                                    bulan: parseInt(getVal(['bulan', 'bln'])) || (new Date().getMonth() + 1),
+                                    tahun: parseInt(getVal(['tahun', 'thn'])) || new Date().getFullYear(),
                                     outlet: getVal(['outlet', 'cabang']) || 'Corporate',
                                     dept: getVal(['departemen', 'dept', 'divisi']) || 'Lainnya',
-                                    target: parseFloat(getVal(['target omset', 't. omset', 'target']) || 0),
-                                    omset: parseFloat(getVal(['aktual omset', 'a. omset', 'omset', 'penjualan']) || 0),
-                                    tProfit: parseFloat(getVal(['target profit', 't. profit']) || 0),
-                                    profit: parseFloat(getVal(['aktual profit', 'a. profit', 'profit', 'laba']) || 0),
-                                    pembelian: parseFloat(getVal(['aktual pembelian', 'pembelian', 'beli']) || 0),
-                                    stock: parseFloat(getVal(['stok akhir', 'stok', 'stock', 'persediaan']) || 0),
+                                    target: getNum(['target omset', 't. omset', 'tgt omset', 'target'], ['profit', 'laba', 'beli', 'margin']),
+                                    omset: getNum(['aktual omset', 'a. omset', 'omset', 'penjualan'], ['target', 't. ', 'tgt ', 'profit', 'laba']),
+                                    tProfit: getNum(['target profit', 't. profit', 'tgt profit', 'target laba'], ['omset', 'penjualan']),
+                                    profit: getNum(['aktual profit', 'a. profit', 'profit', 'laba'], ['target', 't. ', 'tgt ', 'omset', 'penjualan']),
+                                    pembelian: getNum(['aktual pembelian', 'pembelian', 'beli', 'a. beli'], ['target', 't. ', 'tgt ']),
+                                    stock: getNum(['stok akhir', 'stok', 'stock', 'persediaan']),
                                 };
                                 newData.push(dt);
                             });
